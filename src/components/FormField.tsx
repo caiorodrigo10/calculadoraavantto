@@ -36,6 +36,12 @@ export const FormField = ({
     onChange(value[0]);
   };
 
+  // Prevent scroll wheel from changing input value
+  const preventScrollChange = (e: WheelEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   if (type === "percentage") {
     return (
       <div className="input-group">
@@ -94,6 +100,7 @@ export const FormField = ({
           max={max}
           step={step}
           className={`h-12 text-xl font-bold bg-background text-white border-white ${prefix ? 'pl-8' : ''}`}
+          onWheel={preventScrollChange}
         />
       </div>
     </div>
