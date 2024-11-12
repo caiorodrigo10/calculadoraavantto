@@ -1,13 +1,10 @@
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { HelpCircle } from "lucide-react";
 import { calculateROI } from "@/lib/calculations";
 import { ResultsDisplay } from "./ResultsDisplay";
 import { toast } from "sonner";
+import { FormField } from "./FormField";
 
 interface FormData {
   monthlyLeads: number;
@@ -27,9 +24,6 @@ const initialFormData: FormData = {
   meetingsToClose: 0,
 };
 
-const formatCurrency = (value: number) => 
-  new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
-
 export const ROICalculator = () => {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [results, setResults] = useState<any>(null);
@@ -38,8 +32,7 @@ export const ROICalculator = () => {
     setFormData((prev) => ({ ...prev, [field]: value[0] }));
   };
 
-  const handleInputChange = (field: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value) || 0;
+  const handleInputChange = (field: keyof FormData) => (value: number) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -67,150 +60,90 @@ export const ROICalculator = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <TooltipProvider>
-            <div className="input-group">
-              <div className="flex items-center space-x-2 mb-2">
-                <Label htmlFor="monthlyLeads">Total de Leads Mensais Inbound</Label>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <HelpCircle className="h-4 w-4 text-foreground/60" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="w-64">Total de leads recebidos mensalmente</p>
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-              <div className="slider-wrapper">
-                <Slider
-                  id="monthlyLeads"
-                  max={10000}
-                  step={100}
-                  value={[formData.monthlyLeads]}
-                  onValueChange={(value) => handleSliderChange("monthlyLeads", value)}
-                />
-                <span className="value-display">{formData.monthlyLeads}</span>
-              </div>
-            </div>
+          <FormField
+            label="Total de Leads Mensais Inbound"
+            tooltipText="Total de leads recebidos mensalmente"
+            value={formData.monthlyLeads}
+            onChange={handleInputChange("monthlyLeads")}
+            max={10000}
+            step={100}
+          />
 
-            <div className="input-group">
-              <div className="flex items-center space-x-2 mb-2">
-                <Label htmlFor="responseRate">Taxa Média de Resposta Atual (%)</Label>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <HelpCircle className="h-4 w-4 text-foreground/60" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="w-64">Porcentagem de leads que respondem</p>
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-              <div className="slider-wrapper">
-                <Slider
-                  id="responseRate"
-                  max={100}
-                  step={1}
-                  value={[formData.responseRate]}
-                  onValueChange={(value) => handleSliderChange("responseRate", value)}
-                />
-                <span className="value-display">{formData.responseRate}%</span>
-              </div>
+          <div className="input-group">
+            <div className="flex items-center space-x-2 mb-2">
+              <Label htmlFor="responseRate">Taxa Média de Resposta Atual (%)</Label>
+              <Tooltip>
+                <TooltipTrigger>
+                  <HelpCircle className="h-4 w-4 text-foreground/60" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="w-64">Porcentagem de leads que respondem</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
-
-            <div className="input-group">
-              <div className="flex items-center space-x-2 mb-2">
-                <Label htmlFor="meetingRate">Taxa de Leads que Agendam uma Reunião (%)</Label>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <HelpCircle className="h-4 w-4 text-foreground/60" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="w-64">Porcentagem de leads que agendam reunião</p>
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-              <div className="slider-wrapper">
-                <Slider
-                  id="meetingRate"
-                  max={100}
-                  step={1}
-                  value={[formData.meetingRate]}
-                  onValueChange={(value) => handleSliderChange("meetingRate", value)}
-                />
-                <span className="value-display">{formData.meetingRate}%</span>
-              </div>
-            </div>
-
-            <div className="input-group">
-              <div className="flex items-center space-x-2 mb-2">
-                <Label htmlFor="currentCost">Custo Mensal Atual de Agendadores Humanos (R$)</Label>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <HelpCircle className="h-4 w-4 text-foreground/60" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="w-64">Custo total mensal com agendadores</p>
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-              <div className="slider-wrapper">
-                <Slider
-                  id="currentCost"
-                  max={50000}
-                  step={100}
-                  value={[formData.currentCost]}
-                  onValueChange={(value) => handleSliderChange("currentCost", value)}
-                />
-                <span className="value-display">{formatCurrency(formData.currentCost)}</span>
-              </div>
-            </div>
-
-            <div className="input-group">
-              <div className="flex items-center space-x-2 mb-2">
-                <Label htmlFor="leadValue">Valor de um Lead Fechado (R$)</Label>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <HelpCircle className="h-4 w-4 text-foreground/60" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="w-64">Valor médio de um lead convertido</p>
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-              <div className="slider-wrapper">
-                <Slider
-                  id="leadValue"
-                  max={100000}
-                  step={1000}
-                  value={[formData.leadValue]}
-                  onValueChange={(value) => handleSliderChange("leadValue", value)}
-                />
-                <span className="value-display">{formatCurrency(formData.leadValue)}</span>
-              </div>
-            </div>
-
-            <div className="input-group">
-              <div className="flex items-center space-x-2 mb-2">
-                <Label htmlFor="meetingsToClose">Reuniões Necessárias para Fechar um Lead</Label>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <HelpCircle className="h-4 w-4 text-foreground/60" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="w-64">Número médio de reuniões até o fechamento</p>
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-              <Input
-                id="meetingsToClose"
-                type="number"
-                min="1"
-                step="1"
-                value={formData.meetingsToClose || ""}
-                onChange={handleInputChange("meetingsToClose")}
-                className="h-12 text-lg"
+            <div className="slider-wrapper">
+              <Slider
+                id="responseRate"
+                max={100}
+                step={1}
+                value={[formData.responseRate]}
+                onValueChange={(value) => handleSliderChange("responseRate", value)}
               />
+              <span className="value-display">{formData.responseRate}%</span>
             </div>
-          </TooltipProvider>
+          </div>
+
+          <div className="input-group">
+            <div className="flex items-center space-x-2 mb-2">
+              <Label htmlFor="meetingRate">Taxa de Leads que Agendam uma Reunião (%)</Label>
+              <Tooltip>
+                <TooltipTrigger>
+                  <HelpCircle className="h-4 w-4 text-foreground/60" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="w-64">Porcentagem de leads que agendam reunião</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
+            <div className="slider-wrapper">
+              <Slider
+                id="meetingRate"
+                max={100}
+                step={1}
+                value={[formData.meetingRate]}
+                onValueChange={(value) => handleSliderChange("meetingRate", value)}
+              />
+              <span className="value-display">{formData.meetingRate}%</span>
+            </div>
+          </div>
+
+          <FormField
+            label="Custo Mensal Atual de Agendadores Humanos"
+            tooltipText="Custo total mensal com agendadores"
+            value={formData.currentCost}
+            onChange={handleInputChange("currentCost")}
+            prefix="R$"
+            max={50000}
+            step={100}
+          />
+
+          <FormField
+            label="Valor de um Lead Fechado"
+            tooltipText="Valor médio de um lead convertido"
+            value={formData.leadValue}
+            onChange={handleInputChange("leadValue")}
+            prefix="R$"
+            max={100000}
+            step={1000}
+          />
+
+          <FormField
+            label="Reuniões Necessárias para Fechar um Lead"
+            tooltipText="Número médio de reuniões até o fechamento"
+            value={formData.meetingsToClose}
+            onChange={handleInputChange("meetingsToClose")}
+            step={1}
+          />
 
           <Button
             type="submit"
