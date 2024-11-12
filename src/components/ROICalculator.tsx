@@ -70,11 +70,12 @@ export const ROICalculator = () => {
             onChange={handleInputChange("monthlyLeads")}
             max={10000}
             step={100}
+            labelClassName="text-xl font-semibold" // Aumentar tamanho da fonte do título
           />
 
           <div className="input-group">
             <div className="flex items-center space-x-2 mb-2">
-              <Label htmlFor="responseRate">Taxa Média de Resposta Atual (%)</Label>
+              <Label htmlFor="responseRate" className="text-xl font-semibold">Taxa Média de Resposta Atual (%)</Label>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
@@ -100,7 +101,7 @@ export const ROICalculator = () => {
 
           <div className="input-group">
             <div className="flex items-center space-x-2 mb-2">
-              <Label htmlFor="meetingRate">Taxa de Leads que Agendam uma Reunião (%)</Label>
+              <Label htmlFor="meetingRate" className="text-xl font-semibold">Taxa de Leads que Agendam uma Reunião (%)</Label>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
@@ -132,6 +133,7 @@ export const ROICalculator = () => {
             prefix="R$"
             max={50000}
             step={100}
+            labelClassName="text-xl font-semibold" // Aumentar tamanho da fonte do título
           />
 
           <FormField
@@ -142,6 +144,7 @@ export const ROICalculator = () => {
             prefix="R$"
             max={100000}
             step={1000}
+            labelClassName="text-xl font-semibold" // Aumentar tamanho da fonte do título
           />
 
           <FormField
@@ -150,6 +153,7 @@ export const ROICalculator = () => {
             value={formData.meetingsToClose}
             onChange={handleInputChange("meetingsToClose")}
             step={1}
+            labelClassName="text-xl font-semibold" // Aumentar tamanho da fonte do título
           />
 
           <Button
