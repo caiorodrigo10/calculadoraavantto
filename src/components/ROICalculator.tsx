@@ -8,7 +8,6 @@ import { ContactDialog, ContactFormData } from "./ContactDialog";
 import { SummaryPreview } from "./SummaryPreview";
 import { supabase } from "@/integrations/supabase/client";
 import { useROIForm } from "@/hooks/useROIForm";
-import { useROISubmission } from "@/hooks/useROISubmission";
 
 export const ROICalculator = () => {
   const {
@@ -18,15 +17,61 @@ export const ROICalculator = () => {
     allFieldsFilled
   } = useROIForm();
 
-  const {
-    results,
-    showContactDialog,
-    setShowContactDialog,
-    handleSubmit,
-    handleContactSubmit,
-    isSubmitting,
-    reportUrl
-  } = useROISubmission(formData);
+  const [results, setResults] = useState<any>(null);
+  const [showContactDialog, setShowContactDialog] = useState(false);
+  const [pendingResults, setPendingResults] = useState<any>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [reportUrl, setReportUrl] = useState<string | null>(null);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (Object.entries(formData)
+        .some(([_, value]) => value === 0 || (["responseRate", "meetingRate"].includes(_) && value === 1))) {
+      toast.error("Por favor, preencha todos os campos com valores válidos");
+      return;
+    }
+    const calculatedResults = calculateROI(formData);
+    setPendingResults(calculatedResults);
+    setShowContactDialog(true);
+  };
+
+  const handleContactSubmit = async (contactData: ContactFormData) => {
+    setIsSubmitting(true);
+    try {
+      const { data, error } = await supabase
+        .from('roi_submissions')
+        .insert({
+          monthly_leads: formData.monthlyLeads,
+          response_rate: formData.responseRate,
+          meeting_rate: formData.meetingRate,
+          current_cost: formData.currentCost,
+          lead_value: formData.leadValue,
+          meetings_to_close: formData.meetingsToClose,
+          first_name: contactData.firstName,
+          last_name: contactData.lastName,
+          email: contactData.email,
+          phone: contactData.phone,
+          calculated_results: pendingResults
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setResults(pendingResults);
+      setShowContactDialog(false);
+      
+      const reportUrl = `${window.location.origin}/report/${data.id}`;
+      setReportUrl(reportUrl);
+      
+      toast.success("Análise concluída com sucesso!");
+    } catch (error) {
+      console.error('Error saving submission:', error);
+      toast.error("Erro ao salvar os dados. Por favor, tente novamente.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="w-full max-w-7xl mx-auto p-4 sm:p-6 flex flex-col items-center animate-fadeIn">
