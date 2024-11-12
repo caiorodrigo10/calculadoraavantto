@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
+import { Label } from "@/components/ui/label";
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
+import { HelpCircle } from "lucide-react";
 import { calculateROI } from "@/lib/calculations";
 import { ResultsDisplay } from "./ResultsDisplay";
 import { toast } from "sonner";
@@ -72,14 +75,16 @@ export const ROICalculator = () => {
           <div className="input-group">
             <div className="flex items-center space-x-2 mb-2">
               <Label htmlFor="responseRate">Taxa Média de Resposta Atual (%)</Label>
-              <Tooltip>
-                <TooltipTrigger>
-                  <HelpCircle className="h-4 w-4 text-foreground/60" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p className="w-64">Porcentagem de leads que respondem</p>
-                </TooltipContent>
-              </Tooltip>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <HelpCircle className="h-4 w-4 text-foreground/60" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="w-64">Porcentagem de leads que respondem</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
             <div className="slider-wrapper">
               <Slider
@@ -96,14 +101,16 @@ export const ROICalculator = () => {
           <div className="input-group">
             <div className="flex items-center space-x-2 mb-2">
               <Label htmlFor="meetingRate">Taxa de Leads que Agendam uma Reunião (%)</Label>
-              <Tooltip>
-                <TooltipTrigger>
-                  <HelpCircle className="h-4 w-4 text-foreground/60" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p className="w-64">Porcentagem de leads que agendam reunião</p>
-                </TooltipContent>
-              </Tooltip>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <HelpCircle className="h-4 w-4 text-foreground/60" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="w-64">Porcentagem de leads que agendam reunião</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
             <div className="slider-wrapper">
               <Slider
