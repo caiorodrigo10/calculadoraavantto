@@ -11,11 +11,13 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
 const Report = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
 
   const { data: submission, isLoading, error } = useQuery({
     queryKey: ['submission', id],
     queryFn: async () => {
+      if (!id) throw new Error('No ID provided');
+      
       const { data, error } = await supabase
         .from('roi_submissions')
         .select('*')
@@ -25,6 +27,7 @@ const Report = () => {
       if (error) throw error;
       return data;
     },
+    enabled: !!id, // Only run query if we have an ID
   });
 
   const handleDownload = async () => {
@@ -120,7 +123,6 @@ const Report = () => {
       </div>
 
       <div id="report-content" className="space-y-8">
-        {/* Comparison Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <ComparisonCard
             title="Custo Mensal"
@@ -140,10 +142,8 @@ const Report = () => {
           />
         </div>
 
-        {/* Comparison Chart */}
         <ComparisonChart data={comparisonData} />
 
-        {/* Additional Insights */}
         <div className="bg-green-50 border border-green-200 rounded-lg p-6">
           <h3 className="text-xl font-semibold text-green-800 mb-4">
             Insights Adicionais
