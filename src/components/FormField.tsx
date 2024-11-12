@@ -34,7 +34,7 @@ export const FormField = ({
   return (
     <div className="input-group">
       <div className="flex items-center space-x-2 mb-2">
-        <Label htmlFor={label} className={labelClassName}>{label}</Label>
+        <Label htmlFor={label} className={`text-xl font-normal ${labelClassName}`}>{label}</Label>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
@@ -58,7 +58,7 @@ export const FormField = ({
           onChange={handleChange}
           max={max}
           step={step}
-          className={`h-12 text-lg bg-white text-black ${prefix ? 'pl-8' : ''}`}
+          className={`h-12 text-xl font-bold bg-white text-black ${prefix ? 'pl-8' : ''}`}
         />
       </div>
     </div>

@@ -54,7 +54,7 @@ export const ROICalculator = () => {
     <div className="w-full max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fadeIn">
       <div className="space-y-8">
         <div className="space-y-2">
-          <h1 className="text-4xl font-bold">
+          <h1 className="text-4xl font-normal">
             Qual é o Custo da IA vs. Agendadores Humanos?
           </h1>
           <p className="text-lg text-foreground/80">
@@ -70,12 +70,12 @@ export const ROICalculator = () => {
             onChange={handleInputChange("monthlyLeads")}
             max={10000}
             step={100}
-            labelClassName="text-xl font-semibold" // Aumentar tamanho da fonte do título
+            labelClassName="font-normal"
           />
 
           <div className="input-group">
             <div className="flex items-center space-x-2 mb-2">
-              <Label htmlFor="responseRate" className="text-xl font-semibold">Taxa Média de Resposta Atual (%)</Label>
+              <Label htmlFor="responseRate" className="text-xl font-normal">Taxa Média de Resposta Atual (%)</Label>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
@@ -95,13 +95,13 @@ export const ROICalculator = () => {
                 value={[formData.responseRate]}
                 onValueChange={(value) => handleSliderChange("responseRate", value)}
               />
-              <span className="value-display">{formData.responseRate}%</span>
+              <span className="value-display text-xl font-bold">{formData.responseRate}%</span>
             </div>
           </div>
 
           <div className="input-group">
             <div className="flex items-center space-x-2 mb-2">
-              <Label htmlFor="meetingRate" className="text-xl font-semibold">Taxa de Leads que Agendam uma Reunião (%)</Label>
+              <Label htmlFor="meetingRate" className="text-xl font-normal">Taxa de Leads que Agendam uma Reunião (%)</Label>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
@@ -121,7 +121,7 @@ export const ROICalculator = () => {
                 value={[formData.meetingRate]}
                 onValueChange={(value) => handleSliderChange("meetingRate", value)}
               />
-              <span className="value-display">{formData.meetingRate}%</span>
+              <span className="value-display text-xl font-bold">{formData.meetingRate}%</span>
             </div>
           </div>
 
@@ -133,7 +133,7 @@ export const ROICalculator = () => {
             prefix="R$"
             max={50000}
             step={100}
-            labelClassName="text-xl font-semibold" // Aumentar tamanho da fonte do título
+            labelClassName="font-normal"
           />
 
           <FormField
@@ -144,7 +144,7 @@ export const ROICalculator = () => {
             prefix="R$"
             max={100000}
             step={1000}
-            labelClassName="text-xl font-semibold" // Aumentar tamanho da fonte do título
+            labelClassName="font-normal"
           />
 
           <FormField
@@ -153,7 +153,7 @@ export const ROICalculator = () => {
             value={formData.meetingsToClose}
             onChange={handleInputChange("meetingsToClose")}
             step={1}
-            labelClassName="text-xl font-semibold" // Aumentar tamanho da fonte do título
+            labelClassName="font-normal"
           />
 
           <Button
