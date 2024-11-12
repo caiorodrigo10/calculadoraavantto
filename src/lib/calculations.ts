@@ -8,33 +8,29 @@ interface FormData {
 }
 
 export const calculateROI = (data: FormData) => {
+  // Base calculations
   const aiCost = data.currentCost * 0.4;
   const annualSavings = (data.currentCost - aiCost) * 12;
-  const costReduction = 60;
-  const efficiencyGain = 35;
+  
+  // Calculate revenues with improved rates for AI (35% improvement)
+  const currentRevenue = calculateMonthlyRevenue(data, 1);
+  const aiRevenue = calculateMonthlyRevenue(data, 1.35);
 
-  // Calculate current and AI revenues
-  const currentRevenue = data.monthlyLeads * (data.responseRate / 100) * (data.meetingRate / 100) * data.leadValue;
-  const aiRevenue = data.monthlyLeads * ((data.responseRate * 1.35) / 100) * ((data.meetingRate * 1.35) / 100) * data.leadValue;
-
-  // Calculate ROI
+  // Calculate ROI and other metrics
   const revenueIncrease = aiRevenue - currentRevenue;
   const costSavings = data.currentCost - aiCost;
-  const roi = ((revenueIncrease + costSavings) / costSavings) * 100;
+  const totalBenefit = revenueIncrease + costSavings;
+  const roi = (totalBenefit / costSavings) * 100;
 
   // Calculate payback period (in months)
-  const monthlyBenefit = revenueIncrease + costSavings;
+  const monthlyBenefit = totalBenefit;
   const paybackPeriod = costSavings > 0 ? Math.ceil(aiCost / monthlyBenefit) : 0;
 
-  // Additional insights
-  const additionalLeadsPerYear = Math.round(
-    (data.monthlyLeads * ((data.responseRate * 1.35) / 100) * ((data.meetingRate * 1.35) / 100) -
-      data.monthlyLeads * (data.responseRate / 100) * (data.meetingRate / 100)) * 12
-  );
+  // Additional insights calculations
+  const additionalLeadsPerYear = calculateAdditionalLeadsPerYear(data);
+  const profitPerLead = calculateProfitPerLead(data, currentRevenue, aiRevenue);
 
-  const profitPerLead = (aiRevenue / (data.monthlyLeads * ((data.responseRate * 1.35) / 100))) -
-    (currentRevenue / (data.monthlyLeads * (data.responseRate / 100)));
-
+  // Comparison data for charts
   const comparisonData = [
     {
       name: "Custo Mensal",
@@ -56,8 +52,6 @@ export const calculateROI = (data: FormData) => {
   return {
     aiCost,
     annualSavings,
-    costReduction,
-    efficiencyGain,
     comparisonData,
     roi,
     paybackPeriod,
@@ -67,3 +61,32 @@ export const calculateROI = (data: FormData) => {
     aiRevenue,
   };
 };
+
+function calculateMonthlyRevenue(data: FormData, multiplier: number): number {
+  return (
+    data.monthlyLeads *
+    ((data.responseRate * multiplier) / 100) *
+    ((data.meetingRate * multiplier) / 100) *
+    data.leadValue
+  );
+}
+
+function calculateAdditionalLeadsPerYear(data: FormData): number {
+  const currentMonthlyLeads =
+    data.monthlyLeads * (data.responseRate / 100) * (data.meetingRate / 100);
+  const aiMonthlyLeads =
+    data.monthlyLeads *
+    ((data.responseRate * 1.35) / 100) *
+    ((data.meetingRate * 1.35) / 100);
+  return Math.round((aiMonthlyLeads - currentMonthlyLeads) * 12);
+}
+
+function calculateProfitPerLead(
+  data: FormData,
+  currentRevenue: number,
+  aiRevenue: number
+): number {
+  const currentLeads = data.monthlyLeads * (data.responseRate / 100);
+  const aiLeads = data.monthlyLeads * ((data.responseRate * 1.35) / 100);
+  return (aiRevenue / aiLeads) - (currentRevenue / currentLeads);
+}

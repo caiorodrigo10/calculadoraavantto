@@ -39,7 +39,7 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
 
   return (
     <motion.div 
-      className="space-y-6 w-full"
+      className="space-y-6 w-full bg-white text-gray-800 p-8 rounded-lg shadow-lg"
       variants={container}
       initial="hidden"
       animate="show"
@@ -49,37 +49,37 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
         <Button
           onClick={handleDownload}
           variant="outline"
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 text-gray-600"
         >
           <Download className="h-4 w-4" />
           Baixar Relatório
         </Button>
       </div>
 
-      <p className="text-muted-foreground">
+      <p className="text-gray-600">
         Análise baseada nos dados fornecidos por você
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <motion.div variants={item}>
-          <Card className="p-6 bg-white/5">
+          <Card className="p-6 border border-gray-200">
             <h3 className="text-lg font-semibold mb-2">Cenário Atual</h3>
             <div className="space-y-2">
               <p className="flex justify-between">
                 <span>Receita Potencial:</span>
-                <span className="font-bold text-destructive">
+                <span className="font-bold text-red-600">
                   R$ {results.currentRevenue.toLocaleString()}
                 </span>
               </p>
               <p className="flex justify-between">
                 <span>Custo Mensal:</span>
-                <span className="font-bold text-destructive">
+                <span className="font-bold text-red-600">
                   R$ {formData.currentCost.toLocaleString()}
                 </span>
               </p>
               <p className="flex justify-between border-t pt-2">
                 <span>Resultado Líquido:</span>
-                <span className="font-bold text-destructive">
+                <span className="font-bold text-red-600">
                   R$ {(results.currentRevenue - formData.currentCost).toLocaleString()}
                 </span>
               </p>
@@ -88,24 +88,24 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
         </motion.div>
 
         <motion.div variants={item}>
-          <Card className="p-6 bg-white/5">
+          <Card className="p-6 border border-gray-200">
             <h3 className="text-lg font-semibold mb-2">Com IA</h3>
             <div className="space-y-2">
               <p className="flex justify-between">
                 <span>Receita Projetada:</span>
-                <span className="font-bold text-secondary">
+                <span className="font-bold text-green-600">
                   R$ {results.aiRevenue.toLocaleString()}
                 </span>
               </p>
               <p className="flex justify-between">
                 <span>Custo Mensal:</span>
-                <span className="font-bold text-secondary">
+                <span className="font-bold text-green-600">
                   R$ {results.aiCost.toLocaleString()}
                 </span>
               </p>
               <p className="flex justify-between border-t pt-2">
                 <span>Resultado Líquido:</span>
-                <span className="font-bold text-secondary">
+                <span className="font-bold text-green-600">
                   R$ {(results.aiRevenue - results.aiCost).toLocaleString()}
                 </span>
               </p>
@@ -114,38 +114,49 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
         </motion.div>
       </div>
 
-      <motion.div variants={item}>
+      <motion.div variants={item} className="space-y-6">
         <ComparisonChart data={results.comparisonData} />
       </motion.div>
 
       <motion.div variants={item}>
-        <Card className="p-6 bg-white/5">
+        <Card className="p-6 border border-gray-200">
           <h3 className="text-lg font-semibold mb-4">Insights Adicionais</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="space-y-4">
+              <h4 className="font-medium text-gray-700">Impacto Financeiro</h4>
               <div>
-                <h4 className="font-medium mb-1">ROI do Investimento</h4>
-                <p className="text-2xl font-bold text-secondary">{Math.round(results.roi)}%</p>
-                <p className="text-sm text-muted-foreground">Retorno sobre o investimento</p>
+                <p className="text-2xl font-bold text-green-600">{Math.round(results.roi)}%</p>
+                <p className="text-sm text-gray-600">Retorno sobre investimento</p>
               </div>
               <div>
-                <h4 className="font-medium mb-1">Tempo de Retorno</h4>
-                <p className="text-2xl font-bold text-secondary">{results.paybackPeriod} meses</p>
-                <p className="text-sm text-muted-foreground">Para recuperar o investimento</p>
+                <p className="text-2xl font-bold text-green-600">{results.paybackPeriod} meses</p>
+                <p className="text-sm text-gray-600">Tempo de retorno do investimento</p>
               </div>
             </div>
+            
             <div className="space-y-4">
+              <h4 className="font-medium text-gray-700">Benefícios Operacionais</h4>
               <div>
-                <h4 className="font-medium mb-1">Leads Adicionais por Ano</h4>
-                <p className="text-2xl font-bold text-secondary">+{results.additionalLeadsPerYear}</p>
-                <p className="text-sm text-muted-foreground">Aumento na captação anual</p>
+                <p className="text-2xl font-bold text-blue-600">24/7</p>
+                <p className="text-sm text-gray-600">Atendimento contínuo</p>
               </div>
               <div>
-                <h4 className="font-medium mb-1">Lucro Adicional por Lead</h4>
-                <p className="text-2xl font-bold text-secondary">
+                <p className="text-2xl font-bold text-blue-600">-70%</p>
+                <p className="text-sm text-gray-600">Redução no tempo de resposta</p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h4 className="font-medium text-gray-700">Eficiência e Produtividade</h4>
+              <div>
+                <p className="text-2xl font-bold text-blue-600">+{results.additionalLeadsPerYear}</p>
+                <p className="text-sm text-gray-600">Leads adicionais por ano</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-blue-600">
                   R$ {Math.round(results.profitPerLead).toLocaleString()}
                 </p>
-                <p className="text-sm text-muted-foreground">Incremento por lead convertido</p>
+                <p className="text-sm text-gray-600">Lucro adicional por lead</p>
               </div>
             </div>
           </div>
@@ -154,17 +165,17 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
 
       <motion.div 
         variants={item}
-        className="text-center p-8 bg-secondary/10 rounded-lg"
+        className="text-center p-8 bg-gradient-to-r from-green-50 to-green-100 rounded-lg"
       >
-        <h3 className="text-xl font-semibold mb-2">
+        <h3 className="text-xl font-semibold mb-2 text-gray-800">
           Potencialize seus Resultados com IA
         </h3>
-        <p className="text-lg mb-4">
+        <p className="text-lg mb-4 text-gray-600">
           Agende uma reunião com nossos especialistas e descubra como implementar 
           essa solução em sua empresa.
         </p>
         <Button 
-          className="bg-secondary hover:bg-secondary/90 text-lg px-8 py-6"
+          className="bg-green-700 hover:bg-green-800 text-white text-lg px-8 py-6"
           onClick={() => window.open('#', '_blank')}
         >
           Agendar Demonstração
