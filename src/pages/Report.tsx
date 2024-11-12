@@ -20,14 +20,14 @@ const Report = () => {
       
       const { data, error } = await supabase
         .from('roi_submissions')
-        .select('*')
+        .select()
         .eq('id', id)
         .single();
 
       if (error) throw error;
       return data;
     },
-    enabled: !!id, // Only run query if we have an ID
+    enabled: !!id,
   });
 
   const handleDownload = async () => {
