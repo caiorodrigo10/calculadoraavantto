@@ -4,6 +4,8 @@ import { Download } from "lucide-react";
 import { ComparisonChart } from "./ComparisonChart";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 interface ResultsDisplayProps {
   results: any;
@@ -18,8 +20,37 @@ interface ResultsDisplayProps {
 }
 
 export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
-  const handleDownload = () => {
-    toast.success("Relatório baixado com sucesso!");
+  const handleDownload = async () => {
+    try {
+      const element = document.getElementById('results-content');
+      if (!element) return;
+
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        logging: false,
+        useCORS: true,
+        allowTaint: true
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save('relatorio-roi-ia.pdf');
+
+      toast.success("Relatório baixado com sucesso!");
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      toast.error("Erro ao gerar o relatório. Tente novamente.");
+    }
   };
 
   const container = {
@@ -56,6 +87,7 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
         </Button>
       </div>
 
+      <div id="results-content" className="space-y-6">
       <p className="text-gray-600">
         Análise baseada nos dados fornecidos por você
       </p>
@@ -181,6 +213,7 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
           Agendar Demonstração
         </Button>
       </motion.div>
+      </div>
     </motion.div>
   );
 };
