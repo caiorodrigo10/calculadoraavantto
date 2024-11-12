@@ -116,6 +116,7 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
           paybackPeriod={results.paybackPeriod}
           additionalLeadsPerYear={results.additionalLeadsPerYear}
           profitPerLead={results.profitPerLead}
+          formData={formData}
         />
 
         <motion.div 

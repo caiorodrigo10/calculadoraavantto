@@ -6,9 +6,18 @@ interface InsightsSectionProps {
   paybackPeriod: number;
   additionalLeadsPerYear: number;
   profitPerLead: number;
+  formData: {
+    currentCost: number;
+  };
 }
 
-export const InsightsSection = ({ roi, paybackPeriod, additionalLeadsPerYear, profitPerLead }: InsightsSectionProps) => {
+export const InsightsSection = ({ 
+  roi, 
+  paybackPeriod, 
+  additionalLeadsPerYear, 
+  profitPerLead,
+  formData 
+}: InsightsSectionProps) => {
   return (
     <motion.div variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}>
       <Card className="p-6 sm:p-8 bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-100 shadow-sm">
