@@ -5,12 +5,26 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
-    currency: 'BRL'
+    currency: 'BRL',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
   }).format(value);
+};
+
+const formatNumber = (value: number) => {
+  if (value >= 1000000) {
+    return `${(value / 1000000).toFixed(1)}M`;
+  }
+  if (value >= 1000) {
+    return `${(value / 1000).toFixed(1)}K`;
+  }
+  return value.toFixed(0);
 };
 
 const Dashboard = () => {
@@ -99,7 +113,7 @@ const Dashboard = () => {
             Média de Leads Mensais
           </h3>
           <p className="text-2xl font-bold">
-            {metrics?.avgMonthlyLeads.toFixed(1)}
+            {formatNumber(metrics?.avgMonthlyLeads || 0)}
           </p>
         </Card>
         <Card className="p-6">
@@ -123,15 +137,21 @@ const Dashboard = () => {
       <h2 className="text-2xl font-bold mb-4">Submissões Recentes</h2>
       <div className="space-y-4">
         {recentSubmissions?.map((submission) => (
-          <Card key={submission.id} className="p-6">
-            <div className="flex justify-between items-center">
-              <div>
-                <h3 className="font-medium">
-                  {submission.first_name} {submission.last_name}
-                </h3>
-                <p className="text-sm text-gray-500">{submission.email}</p>
+          <Card key={submission.id} className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4 flex-1">
+                <div>
+                  <h3 className="font-medium">
+                    {submission.first_name} {submission.last_name}
+                  </h3>
+                  <p className="text-sm text-gray-500">{submission.email}</p>
+                </div>
+                <span className="text-sm text-gray-500">
+                  {format(new Date(submission.created_at), "dd/MM/yyyy", { locale: ptBR })}
+                </span>
               </div>
               <Button
+                size="sm"
                 onClick={() => navigate(`/report/${submission.id}`)}
               >
                 Ver Relatório
