@@ -6,6 +6,13 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
 
+const formatCurrency = (value: number) => {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  }).format(value);
+};
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -19,8 +26,8 @@ const Dashboard = () => {
 
       if (error) {
         toast({
-          title: "Error",
-          description: "Failed to load metrics",
+          title: "Erro",
+          description: "Falha ao carregar métricas",
           variant: "destructive",
         });
         throw error;
@@ -28,15 +35,14 @@ const Dashboard = () => {
 
       const totalSubmissions = data.length;
       const avgMonthlyLeads =
-        data.reduce((acc, curr) => acc + curr.monthly_leads, 0) / totalSubmissions;
+        data.reduce((acc, curr) => acc + curr.monthly_leads, 0) / totalSubmissions || 0;
       const avgMonthlyCost =
-        data.reduce((acc, curr) => acc + curr.current_cost, 0) / totalSubmissions;
+        data.reduce((acc, curr) => acc + curr.current_cost, 0) / totalSubmissions || 0;
       const avgPotentialRevenue =
-        data.reduce(
-          (acc, curr) =>
-            acc + (curr.calculated_results as any).potentialRevenue,
-          0
-        ) / totalSubmissions;
+        data.reduce((acc, curr) => {
+          const results = curr.calculated_results as any;
+          return acc + (results?.aiRevenue || 0);
+        }, 0) / totalSubmissions || 0;
 
       return {
         totalSubmissions,
@@ -58,8 +64,8 @@ const Dashboard = () => {
 
       if (error) {
         toast({
-          title: "Error",
-          description: "Failed to load recent submissions",
+          title: "Erro",
+          description: "Falha ao carregar submissões recentes",
           variant: "destructive",
         });
         throw error;
@@ -84,13 +90,13 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <Card className="p-6">
           <h3 className="text-sm font-medium text-gray-500">
-            Total Submissions
+            Total de Submissões
           </h3>
           <p className="text-2xl font-bold">{metrics?.totalSubmissions}</p>
         </Card>
         <Card className="p-6">
           <h3 className="text-sm font-medium text-gray-500">
-            Avg Monthly Leads
+            Média de Leads Mensais
           </h3>
           <p className="text-2xl font-bold">
             {metrics?.avgMonthlyLeads.toFixed(1)}
@@ -98,23 +104,23 @@ const Dashboard = () => {
         </Card>
         <Card className="p-6">
           <h3 className="text-sm font-medium text-gray-500">
-            Avg Monthly Cost
+            Custo Médio Mensal
           </h3>
           <p className="text-2xl font-bold">
-            ${metrics?.avgMonthlyCost.toFixed(2)}
+            {formatCurrency(metrics?.avgMonthlyCost || 0)}
           </p>
         </Card>
         <Card className="p-6">
           <h3 className="text-sm font-medium text-gray-500">
-            Avg Potential Revenue
+            Receita Potencial Média
           </h3>
           <p className="text-2xl font-bold">
-            ${metrics?.avgPotentialRevenue.toFixed(2)}
+            {formatCurrency(metrics?.avgPotentialRevenue || 0)}
           </p>
         </Card>
       </div>
 
-      <h2 className="text-2xl font-bold mb-4">Recent Submissions</h2>
+      <h2 className="text-2xl font-bold mb-4">Submissões Recentes</h2>
       <div className="space-y-4">
         {recentSubmissions?.map((submission) => (
           <Card key={submission.id} className="p-6">
@@ -128,7 +134,7 @@ const Dashboard = () => {
               <Button
                 onClick={() => navigate(`/report/${submission.id}`)}
               >
-                View Report
+                Ver Relatório
               </Button>
             </div>
           </Card>
