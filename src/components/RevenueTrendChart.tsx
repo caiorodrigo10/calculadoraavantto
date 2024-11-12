@@ -1,5 +1,5 @@
 import { ChartContainer } from "@/components/ui/chart";
-import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
+import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip, Legend } from "recharts";
 
 const monthlyData = [
   { month: 'Jan', humano: 719000, ia: 1382280 },
@@ -29,7 +29,10 @@ export const RevenueTrendChart = () => {
           }}
         >
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={monthlyData}>
+            <AreaChart 
+              data={monthlyData}
+              margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+            >
               <defs>
                 <linearGradient id="humanGradient" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor="#ef4444" stopOpacity={0.3} />
@@ -46,6 +49,10 @@ export const RevenueTrendChart = () => {
                 fontSize={12}
                 tickLine={false}
                 axisLine={false}
+                angle={0}
+                textAnchor="middle"
+                height={60}
+                padding={{ left: 30, right: 30 }}
               />
               <YAxis
                 stroke="#888888"
@@ -54,10 +61,17 @@ export const RevenueTrendChart = () => {
                 axisLine={false}
                 tickFormatter={(value) => `${(value / 1000).toFixed(0)}K`}
               />
+              <Legend 
+                verticalAlign="top" 
+                height={36}
+                formatter={(value) => {
+                  return value === "humano" ? "Cenário Atual (Humano)" : "Com IA";
+                }}
+              />
               <Area
                 type="monotone"
                 dataKey="humano"
-                name="Cenário Atual"
+                name="humano"
                 stroke="#ef4444"
                 fill="url(#humanGradient)"
                 strokeWidth={2}
@@ -65,7 +79,7 @@ export const RevenueTrendChart = () => {
               <Area
                 type="monotone"
                 dataKey="ia"
-                name="Com IA"
+                name="ia"
                 stroke="#22c55e"
                 fill="url(#iaGradient)"
                 strokeWidth={2}
@@ -77,7 +91,9 @@ export const RevenueTrendChart = () => {
                       <div className="bg-background p-2 border border-border rounded-lg shadow-lg">
                         {payload.map((entry) => (
                           <div key={entry.name} className="text-sm text-foreground">
-                            <span className="font-medium">{entry.name}: </span>
+                            <span className="font-medium">
+                              {entry.name === "humano" ? "Cenário Atual: " : "Com IA: "}
+                            </span>
                             <span>R$ {entry.value.toLocaleString()}</span>
                           </div>
                         ))}
