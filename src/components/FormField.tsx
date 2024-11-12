@@ -37,7 +37,7 @@ export const FormField = ({
   };
 
   // Prevent scroll wheel from changing input value
-  const preventScrollChange = (e: WheelEvent) => {
+  const preventScrollChange = (e: React.WheelEvent<HTMLInputElement>) => {
     e.preventDefault();
     e.stopPropagation();
   };
