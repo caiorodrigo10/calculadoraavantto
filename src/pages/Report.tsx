@@ -3,8 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
-import ResultsDisplay from "@/components/ResultsDisplay";
-import InsightsSection from "@/components/results/InsightsSection";
+import { ResultsDisplay } from "@/components/ResultsDisplay";
+import { InsightsSection } from "@/components/results/InsightsSection";
 
 const Report = () => {
   const { id } = useParams();
@@ -51,8 +51,13 @@ const Report = () => {
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold mb-8">ROI Report</h1>
-      <ResultsDisplay results={submission.calculated_results} />
-      <InsightsSection results={submission.calculated_results} />
+      <ResultsDisplay results={submission.calculated_results} formData={submission} />
+      <InsightsSection 
+        roi={submission.calculated_results.roi}
+        paybackPeriod={submission.calculated_results.paybackPeriod}
+        additionalLeadsPerYear={submission.calculated_results.additionalLeadsPerYear}
+        profitPerLead={submission.calculated_results.profitPerLead}
+      />
     </div>
   );
 };
