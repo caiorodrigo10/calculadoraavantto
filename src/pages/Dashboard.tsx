@@ -1,80 +1,75 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/contexts/AuthContext";
-import { Loader2, LogOut } from "lucide-react";
-
-interface DashboardStats {
-  totalSubmissions: number;
-  averageLeads: number;
-  averageCost: number;
-  averageRevenue: number;
-}
-
-interface RecentSubmission {
-  id: string;
-  first_name: string;
-  last_name: string;
-  created_at: string;
-  monthly_leads: number;
-}
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
+import { Loader2 } from "lucide-react";
 
 const Dashboard = () => {
-  const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [recentSubmissions, setRecentSubmissions] = useState<RecentSubmission[]>([]);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const { session } = useAuth();
+  const { toast } = useToast();
 
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        // Fetch stats
-        const { data: submissions } = await supabase
-          .from('roi_submissions')
-          .select('monthly_leads, current_cost, calculated_results');
+  const { data: metrics, isLoading: metricsLoading } = useQuery({
+    queryKey: ["dashboard-metrics"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("roi_submissions")
+        .select("monthly_leads, current_cost, calculated_results");
 
-        if (submissions) {
-          const stats = {
-            totalSubmissions: submissions.length,
-            averageLeads: submissions.reduce((acc, curr) => acc + curr.monthly_leads, 0) / submissions.length,
-            averageCost: submissions.reduce((acc, curr) => acc + curr.current_cost, 0) / submissions.length,
-            averageRevenue: submissions.reduce((acc, curr) => {
-              const results = curr.calculated_results as any;
-              return acc + (results?.aiRevenue || 0);
-            }, 0) / submissions.length,
-          };
-          setStats(stats);
-        }
-
-        // Fetch recent submissions
-        const { data: recent } = await supabase
-          .from('roi_submissions')
-          .select('id, first_name, last_name, created_at, monthly_leads')
-          .order('created_at', { ascending: false })
-          .limit(5);
-
-        if (recent) {
-          setRecentSubmissions(recent);
-        }
-      } catch (error) {
-        console.error('Error fetching dashboard data:', error);
-      } finally {
-        setLoading(false);
+      if (error) {
+        toast({
+          title: "Error",
+          description: "Failed to load metrics",
+          variant: "destructive",
+        });
+        throw error;
       }
-    };
 
-    fetchDashboardData();
-  }, []);
+      const totalSubmissions = data.length;
+      const avgMonthlyLeads =
+        data.reduce((acc, curr) => acc + curr.monthly_leads, 0) / totalSubmissions;
+      const avgMonthlyCost =
+        data.reduce((acc, curr) => acc + curr.current_cost, 0) / totalSubmissions;
+      const avgPotentialRevenue =
+        data.reduce(
+          (acc, curr) =>
+            acc + (curr.calculated_results as any).potentialRevenue,
+          0
+        ) / totalSubmissions;
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    navigate('/login');
-  };
+      return {
+        totalSubmissions,
+        avgMonthlyLeads,
+        avgMonthlyCost,
+        avgPotentialRevenue,
+      };
+    },
+  });
 
-  if (loading) {
+  const { data: recentSubmissions, isLoading: submissionsLoading } = useQuery({
+    queryKey: ["recent-submissions"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("roi_submissions")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(5);
+
+      if (error) {
+        toast({
+          title: "Error",
+          description: "Failed to load recent submissions",
+          variant: "destructive",
+        });
+        throw error;
+      }
+
+      return data;
+    },
+  });
+
+  if (metricsLoading || submissionsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
@@ -83,63 +78,61 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-          <Button variant="outline" onClick={handleLogout} className="flex items-center gap-2">
-            <LogOut className="h-4 w-4" />
-            Sair
-          </Button>
-        </div>
+    <div className="container mx-auto py-8">
+      <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="p-6">
-            <h3 className="text-sm font-medium text-gray-500">Total de Formulários</h3>
-            <p className="mt-2 text-3xl font-semibold text-gray-900">{stats?.totalSubmissions || 0}</p>
-          </Card>
-          <Card className="p-6">
-            <h3 className="text-sm font-medium text-gray-500">Média de Leads Mensais</h3>
-            <p className="mt-2 text-3xl font-semibold text-gray-900">
-              {Math.round(stats?.averageLeads || 0).toLocaleString()}
-            </p>
-          </Card>
-          <Card className="p-6">
-            <h3 className="text-sm font-medium text-gray-500">Média de Custo Mensal</h3>
-            <p className="mt-2 text-3xl font-semibold text-gray-900">
-              {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
-                .format(stats?.averageCost || 0)}
-            </p>
-          </Card>
-          <Card className="p-6">
-            <h3 className="text-sm font-medium text-gray-500">Média de Receita Potencial</h3>
-            <p className="mt-2 text-3xl font-semibold text-gray-900">
-              {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
-                .format(stats?.averageRevenue || 0)}
-            </p>
-          </Card>
-        </div>
-
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <Card className="p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Últimos Cadastros</h2>
-          <div className="space-y-4">
-            {recentSubmissions.map((submission) => (
-              <div key={submission.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                <div>
-                  <h3 className="font-medium text-gray-900">
-                    {submission.first_name} {submission.last_name}
-                  </h3>
-                  <p className="text-sm text-gray-500">
-                    {new Date(submission.created_at).toLocaleDateString('pt-BR')}
-                  </p>
-                </div>
-                <Button onClick={() => navigate(`/report/${submission.id}`)}>
-                  Ver Relatório
-                </Button>
-              </div>
-            ))}
-          </div>
+          <h3 className="text-sm font-medium text-gray-500">
+            Total Submissions
+          </h3>
+          <p className="text-2xl font-bold">{metrics?.totalSubmissions}</p>
         </Card>
+        <Card className="p-6">
+          <h3 className="text-sm font-medium text-gray-500">
+            Avg Monthly Leads
+          </h3>
+          <p className="text-2xl font-bold">
+            {metrics?.avgMonthlyLeads.toFixed(1)}
+          </p>
+        </Card>
+        <Card className="p-6">
+          <h3 className="text-sm font-medium text-gray-500">
+            Avg Monthly Cost
+          </h3>
+          <p className="text-2xl font-bold">
+            ${metrics?.avgMonthlyCost.toFixed(2)}
+          </p>
+        </Card>
+        <Card className="p-6">
+          <h3 className="text-sm font-medium text-gray-500">
+            Avg Potential Revenue
+          </h3>
+          <p className="text-2xl font-bold">
+            ${metrics?.avgPotentialRevenue.toFixed(2)}
+          </p>
+        </Card>
+      </div>
+
+      <h2 className="text-2xl font-bold mb-4">Recent Submissions</h2>
+      <div className="space-y-4">
+        {recentSubmissions?.map((submission) => (
+          <Card key={submission.id} className="p-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <h3 className="font-medium">
+                  {submission.first_name} {submission.last_name}
+                </h3>
+                <p className="text-sm text-gray-500">{submission.email}</p>
+              </div>
+              <Button
+                onClick={() => navigate(`/report/${submission.id}`)}
+              >
+                View Report
+              </Button>
+            </div>
+          </Card>
+        ))}
       </div>
     </div>
   );

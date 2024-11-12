@@ -1,41 +1,38 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { ResultsDisplay } from "@/components/ResultsDisplay";
-import { Loader2, ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
+import { Loader2 } from "lucide-react";
+import ResultsDisplay from "@/components/ResultsDisplay";
+import InsightsSection from "@/components/results/InsightsSection";
 
 const Report = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
-  useEffect(() => {
-    const fetchReport = async () => {
-      try {
-        const { data: submission } = await supabase
-          .from('roi_submissions')
-          .select('*')
-          .eq('id', id)
-          .single();
+  const { data: submission, isLoading } = useQuery({
+    queryKey: ["submission", id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("roi_submissions")
+        .select("*")
+        .eq("id", id)
+        .single();
 
-        if (submission) {
-          setData(submission);
-        }
-      } catch (error) {
-        console.error('Error fetching report:', error);
-      } finally {
-        setLoading(false);
+      if (error) {
+        toast({
+          title: "Error",
+          description: "Failed to load submission data",
+          variant: "destructive",
+        });
+        throw error;
       }
-    };
 
-    if (id) {
-      fetchReport();
-    }
-  }, [id]);
+      return data;
+    },
+  });
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
@@ -43,39 +40,19 @@ const Report = () => {
     );
   }
 
-  if (!data) {
+  if (!submission) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center">
-        <p className="text-xl text-gray-600 mb-4">Relatório não encontrado</p>
-        <Button onClick={() => navigate('/dashboard')}>Voltar para Dashboard</Button>
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-lg">Submission not found</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        <Button
-          variant="outline"
-          onClick={() => navigate('/dashboard')}
-          className="mb-6 flex items-center gap-2"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Voltar para Dashboard
-        </Button>
-
-        <ResultsDisplay
-          results={data.calculated_results}
-          formData={{
-            monthlyLeads: data.monthly_leads,
-            responseRate: data.response_rate,
-            meetingRate: data.meeting_rate,
-            currentCost: data.current_cost,
-            leadValue: data.lead_value,
-            meetingsToClose: data.meetings_to_close,
-          }}
-        />
-      </div>
+    <div className="container mx-auto py-8">
+      <h1 className="text-3xl font-bold mb-8">ROI Report</h1>
+      <ResultsDisplay results={submission.calculated_results} />
+      <InsightsSection results={submission.calculated_results} />
     </div>
   );
 };
