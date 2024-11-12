@@ -64,11 +64,11 @@ export const ROICalculator = () => {
     <div className="w-full max-w-7xl mx-auto p-6 flex flex-col items-center animate-fadeIn">
       <div className="text-center space-y-6 max-w-4xl mb-16">
         <img 
-          src="https://unicorn-images.b-cdn.net/d911f5e3-877b-40db-a0d9-8a6e43928ff8?optimizer=gif&width=372&height=82" 
+          src="https://unicorn-images.b-cdn.net/d911f5e3-877b-40db-a0d9-8a6e43928ff8?optimizer=gif&width=186&height=41" 
           alt="Logo"
           className="mx-auto mb-8"
-          width={372}
-          height={82}
+          width={186}
+          height={41}
         />
         <h1 className="text-5xl font-normal leading-tight">
           Qual é o Custo da IA vs. Agendadores Humanos?
