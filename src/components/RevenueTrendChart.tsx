@@ -19,8 +19,8 @@ const monthlyData = [
 export const RevenueTrendChart = () => {
   return (
     <div className="w-full space-y-4">
-      <h4 className="text-lg font-medium">Tendência de Lucratividade Mensal</h4>
-      <div className="h-[400px] bg-card rounded-lg p-4 border border-border">
+      <h4 className="text-xl font-medium text-gray-800">Tendência de Lucratividade Mensal</h4>
+      <div className="h-[400px] bg-white rounded-lg p-6 border border-gray-100 shadow-sm">
         <ChartContainer
           className="w-full"
           config={{
@@ -35,11 +35,11 @@ export const RevenueTrendChart = () => {
             >
               <defs>
                 <linearGradient id="humanGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#ef4444" stopOpacity={0.3} />
+                  <stop offset="0%" stopColor="#ef4444" stopOpacity={0.2} />
                   <stop offset="100%" stopColor="#ef4444" stopOpacity={0} />
                 </linearGradient>
                 <linearGradient id="iaGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#22c55e" stopOpacity={0.3} />
+                  <stop offset="0%" stopColor="#22c55e" stopOpacity={0.2} />
                   <stop offset="100%" stopColor="#22c55e" stopOpacity={0} />
                 </linearGradient>
               </defs>
@@ -88,13 +88,15 @@ export const RevenueTrendChart = () => {
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
                     return (
-                      <div className="bg-background p-2 border border-border rounded-lg shadow-lg">
+                      <div className="bg-white p-3 border border-gray-100 rounded-lg shadow-lg">
                         {payload.map((entry) => (
-                          <div key={entry.name} className="text-sm text-foreground">
+                          <div key={entry.name} className="text-sm">
                             <span className="font-medium">
                               {entry.name === "humano" ? "Cenário Atual: " : "Com IA: "}
                             </span>
-                            <span>R$ {entry.value.toLocaleString()}</span>
+                            <span className={entry.name === "humano" ? "text-red-600" : "text-green-600"}>
+                              R$ {entry.value.toLocaleString()}
+                            </span>
                           </div>
                         ))}
                       </div>

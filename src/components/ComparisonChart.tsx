@@ -15,38 +15,36 @@ export const ComparisonChart = ({ data }: ComparisonChartProps) => {
   const annualSavings = monthlySavings * 12;
 
   return (
-    <div className="w-full space-y-8 mb-8">
-      <h3 className="text-lg font-semibold mb-4">Comparativo de Desempenho</h3>
+    <div className="w-full space-y-8">
+      <h3 className="text-xl font-semibold text-gray-800 mb-6">Comparativo de Desempenho</h3>
       
-      {/* Números em Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {data.map((item) => (
-          <div key={item.name} className="bg-card p-6 rounded-lg border border-border">
-            <h4 className="text-lg font-medium mb-4 text-foreground">{item.name}</h4>
+          <Card key={item.name} className="p-6 bg-white border-gray-100 shadow-sm">
+            <h4 className="text-lg font-medium mb-4 text-gray-800">{item.name}</h4>
             <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-foreground bg-background/80 px-2 py-1 rounded">Humano</span>
-                <span className="text-xl font-bold text-destructive">
+              <div className="flex justify-between items-center p-3 bg-red-50 rounded-lg">
+                <span className="text-gray-700">Humano</span>
+                <span className="text-xl font-bold text-red-600">
                   {item.name === "Custo Mensal" 
                     ? `R$ ${item.humano.toLocaleString()}`
                     : Math.round(item.humano).toLocaleString()}
                 </span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-foreground bg-background/80 px-2 py-1 rounded">IA</span>
-                <span className="text-xl font-bold text-green-500">
+              <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+                <span className="text-gray-700">IA</span>
+                <span className="text-xl font-bold text-green-600">
                   {item.name === "Custo Mensal"
                     ? `R$ ${item.ia.toLocaleString()}`
                     : Math.round(item.ia).toLocaleString()}
                 </span>
               </div>
             </div>
-          </div>
+          </Card>
         ))}
       </div>
 
-      {/* Card de Economia Anual */}
-      <Card className="p-6 bg-green-50 border-green-200">
+      <Card className="p-6 bg-gradient-to-r from-green-50 to-green-100 border-green-200 shadow-sm">
         <h4 className="text-xl font-semibold text-green-800 mb-2">Economia Anual Projetada</h4>
         <p className="text-3xl font-bold text-green-600">
           R$ {annualSavings.toLocaleString()}
@@ -56,8 +54,7 @@ export const ComparisonChart = ({ data }: ComparisonChartProps) => {
         </p>
       </Card>
 
-      {/* Gráfico de Tendências */}
-      <div className="mb-16">
+      <div className="mt-8 mb-8">
         <RevenueTrendChart />
       </div>
     </div>
