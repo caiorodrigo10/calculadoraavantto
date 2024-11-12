@@ -61,31 +61,31 @@ export const ROICalculator = () => {
     .some(([key, value]) => value === 0 || (["responseRate", "meetingRate"].includes(key) && value === 1));
 
   return (
-    <div className="w-full max-w-7xl mx-auto p-6 flex flex-col items-center animate-fadeIn">
-      <div className="text-center space-y-6 max-w-4xl mb-16">
+    <div className="w-full max-w-7xl mx-auto p-4 sm:p-6 flex flex-col items-center animate-fadeIn">
+      <div className="text-center space-y-4 sm:space-y-6 max-w-4xl mb-8 sm:mb-16 px-2">
         <img 
           src="https://unicorn-images.b-cdn.net/d911f5e3-877b-40db-a0d9-8a6e43928ff8?optimizer=gif&width=130&height=29" 
           alt="Logo"
-          className="mx-auto mb-8"
+          className="mx-auto mb-6 sm:mb-8"
           width={130}
           height={29}
         />
-        <h1 className="text-5xl font-normal leading-tight">
+        <h1 className="text-3xl sm:text-5xl font-normal leading-tight">
           Qual é o Custo da IA vs. Agendadores Humanos?
         </h1>
-        <p className="text-2xl text-foreground/80">
+        <p className="text-xl sm:text-2xl text-foreground/80 px-2">
           Calcule para saber o momento certo de migrar para uma solução de qualificação e agendamento de leads automatizada.
         </p>
-        <div className="flex items-center justify-center gap-4 pt-6">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-4 sm:pt-6">
           <Button
             variant="outline"
-            className="text-lg px-6 py-6 border-white hover:bg-white/10"
+            className="w-full sm:w-auto text-base sm:text-lg px-4 py-4 sm:px-6 sm:py-6 border-white hover:bg-white/10"
             onClick={() => window.open('#', '_blank')}
           >
             Leia sobre este relatório
           </Button>
           <Button
-            className="text-lg px-6 py-6 bg-[#ff6b00] hover:bg-[#ff6b00]/90"
+            className="w-full sm:w-auto text-base sm:text-lg px-4 py-4 sm:px-6 sm:py-6 bg-[#ff6b00] hover:bg-[#ff6b00]/90"
             onClick={() => window.open('#', '_blank')}
           >
             Obtenha seu bot grátis agora
@@ -93,7 +93,7 @@ export const ROICalculator = () => {
         </div>
       </div>
 
-      <div className="w-full grid grid-cols-1 lg:grid-cols-[28%_72%] gap-8">
+      <div className="w-full grid grid-cols-1 lg:grid-cols-[28%_72%] gap-4 sm:gap-8">
         <div className="space-y-6">
           <form onSubmit={handleSubmit} className="space-y-6 max-w-[280px] mx-auto">
             <FormField
