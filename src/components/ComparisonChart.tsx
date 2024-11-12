@@ -1,5 +1,5 @@
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
 
 interface ComparisonChartProps {
   data: {
@@ -46,9 +46,23 @@ export const ComparisonChart = ({ data }: ComparisonChartProps) => {
                     fill="var(--color-ia)"
                     radius={[4, 4, 0, 0]}
                   />
-                  <ChartTooltip>
-                    <ChartTooltipContent />
-                  </ChartTooltip>
+                  <Tooltip 
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        return (
+                          <div className="bg-background p-2 border border-border rounded-lg shadow-lg">
+                            {payload.map((entry) => (
+                              <div key={entry.name} className="text-sm">
+                                <span className="font-medium">{entry.name}: </span>
+                                <span>{entry.value}</span>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </ChartContainer>
