@@ -2,6 +2,7 @@ import { Label } from "@/components/ui/label";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { HelpCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
 
 interface FormFieldProps {
   label: string;
@@ -9,7 +10,7 @@ interface FormFieldProps {
   value: number;
   onChange: (value: number) => void;
   prefix?: string;
-  type?: "number" | "currency";
+  type?: "number" | "currency" | "percentage";
   max?: number;
   step?: number;
   labelClassName?: string;
@@ -22,7 +23,7 @@ export const FormField = ({
   onChange,
   prefix,
   type = "number",
-  max,
+  max = 100,
   step = 1,
   labelClassName = "",
 }: FormFieldProps) => {
@@ -30,6 +31,40 @@ export const FormField = ({
     const value = parseFloat(e.target.value) || 0;
     onChange(value);
   };
+
+  const handleSliderChange = (value: number[]) => {
+    onChange(value[0]);
+  };
+
+  if (type === "percentage") {
+    return (
+      <div className="input-group">
+        <div className="flex items-center space-x-2 mb-2">
+          <Label htmlFor={label} className={`text-lg font-normal ${labelClassName}`}>{label}</Label>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <HelpCircle className="h-4 w-4 text-foreground/60" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="w-64">{tooltipText}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+        <div className="slider-wrapper">
+          <Slider
+            value={[value]}
+            onValueChange={handleSliderChange}
+            max={100}
+            step={1}
+            className="flex-1"
+          />
+          <span className="value-display">{value}%</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="input-group">

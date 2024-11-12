@@ -106,8 +106,7 @@ export const ROICalculator = () => {
               tooltipText="Porcentagem de leads que respondem"
               value={formData.responseRate}
               onChange={handleInputChange("responseRate")}
-              max={100}
-              step={1}
+              type="percentage"
               labelClassName="font-normal"
             />
             <FormField
@@ -115,8 +114,7 @@ export const ROICalculator = () => {
               tooltipText="Porcentagem de leads que agendam reunião"
               value={formData.meetingRate}
               onChange={handleInputChange("meetingRate")}
-              max={100}
-              step={1}
+              type="percentage"
               labelClassName="font-normal"
             />
             <FormField
