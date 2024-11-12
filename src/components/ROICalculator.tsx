@@ -129,7 +129,6 @@ export const ROICalculator = () => {
               tooltipText="Total de leads recebidos mensalmente"
               value={formData.monthlyLeads}
               onChange={handleInputChange("monthlyLeads")}
-              max={10000}
               step={100}
               labelClassName="font-normal text-base"
             />
@@ -155,7 +154,6 @@ export const ROICalculator = () => {
               value={formData.currentCost}
               onChange={handleInputChange("currentCost")}
               prefix="R$"
-              max={50000}
               step={100}
               labelClassName="font-normal text-base"
             />
@@ -165,7 +163,6 @@ export const ROICalculator = () => {
               value={formData.leadValue}
               onChange={handleInputChange("leadValue")}
               prefix="R$"
-              max={100000}
               step={1000}
               labelClassName="font-normal text-base"
             />
