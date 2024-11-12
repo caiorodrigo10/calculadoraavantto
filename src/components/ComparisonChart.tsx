@@ -10,19 +10,20 @@ interface ComparisonChartProps {
   }[];
 }
 
+// Calculate accumulated costs for each month
 const monthlyData = [
   { month: 'Jan', humano: 5000, ia: 997 },
-  { month: 'Fev', humano: 5000, ia: 997 },
-  { month: 'Mar', humano: 5000, ia: 997 },
-  { month: 'Abr', humano: 5000, ia: 997 },
-  { month: 'Mai', humano: 5000, ia: 997 },
-  { month: 'Jun', humano: 5000, ia: 997 },
-  { month: 'Jul', humano: 5000, ia: 997 },
-  { month: 'Ago', humano: 5000, ia: 997 },
-  { month: 'Set', humano: 5000, ia: 997 },
-  { month: 'Out', humano: 5000, ia: 997 },
-  { month: 'Nov', humano: 5000, ia: 997 },
-  { month: 'Dez', humano: 5000, ia: 997 },
+  { month: 'Fev', humano: 10000, ia: 1994 },
+  { month: 'Mar', humano: 15000, ia: 2991 },
+  { month: 'Abr', humano: 20000, ia: 3988 },
+  { month: 'Mai', humano: 25000, ia: 4985 },
+  { month: 'Jun', humano: 30000, ia: 5982 },
+  { month: 'Jul', humano: 35000, ia: 6979 },
+  { month: 'Ago', humano: 40000, ia: 7976 },
+  { month: 'Set', humano: 45000, ia: 8973 },
+  { month: 'Out', humano: 50000, ia: 9970 },
+  { month: 'Nov', humano: 55000, ia: 10967 },
+  { month: 'Dez', humano: 60000, ia: 11964 },
 ];
 
 export const ComparisonChart = ({ data }: ComparisonChartProps) => {
@@ -61,9 +62,9 @@ export const ComparisonChart = ({ data }: ComparisonChartProps) => {
         ))}
       </div>
 
-      {/* Gráfico de Custo Mensal */}
+      {/* Gráfico de Custo Mensal Acumulado */}
       <div className="mt-8">
-        <h4 className="text-lg font-medium mb-4">Comparativo de Custo Mensal</h4>
+        <h4 className="text-lg font-medium mb-4">Comparativo de Custo Mensal Acumulado</h4>
         <div className="w-full h-[400px]">
           <ChartContainer
             className="w-full"
@@ -86,7 +87,7 @@ export const ComparisonChart = ({ data }: ComparisonChartProps) => {
                   fontSize={12}
                   tickLine={false}
                   axisLine={false}
-                  tickFormatter={(value) => `R$ ${value}`}
+                  tickFormatter={(value) => `R$ ${value.toLocaleString()}`}
                 />
                 <Line
                   type="monotone"
