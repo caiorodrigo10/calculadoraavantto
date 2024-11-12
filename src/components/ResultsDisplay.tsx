@@ -7,7 +7,6 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { ResultCard } from "./results/ResultCard";
 import { InsightsSection } from "./results/InsightsSection";
-import { RevenueTrendChart } from "./RevenueTrendChart";
 
 interface ResultsDisplayProps {
   results: any;
@@ -85,7 +84,7 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
           Análise baseada nos dados fornecidos por você
         </p>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <ResultCard
             title="Cenário Atual"
             data={[
@@ -102,11 +101,6 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
               { label: "Custo Mensal", value: results.aiCost, colorClass: "text-green-600" },
               { label: "Resultado Líquido", value: results.aiRevenue - results.aiCost, colorClass: "text-green-600" }
             ]}
-          />
-
-          <RevenueTrendChart
-            currentRevenue={results.currentRevenue}
-            aiRevenue={results.aiRevenue}
           />
         </div>
 
