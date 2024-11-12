@@ -12,7 +12,7 @@ interface ResultCardProps {
 
 export const ResultCard = ({ title, data, className = "" }: ResultCardProps) => {
   return (
-    <Card className={`p-4 sm:p-6 bg-white border border-gray-200 shadow-sm ${className}`}>
+    <Card className={`p-4 sm:p-6 bg-white border border-gray-200 shadow-sm w-full ${className}`}>
       <h3 className="text-lg font-semibold mb-4 text-gray-800">{title}</h3>
       <div className="space-y-3">
         {data.map((item, index) => (

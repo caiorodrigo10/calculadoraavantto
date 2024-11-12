@@ -56,7 +56,7 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
 
   return (
     <motion.div 
-      className="space-y-8 w-full bg-white p-6 sm:p-8 rounded-lg shadow-lg"
+      className="w-full space-y-8 bg-white p-6 sm:p-8 rounded-lg shadow-lg"
       initial="hidden"
       animate="show"
       variants={{
@@ -67,7 +67,7 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
         }
       }}
     >
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-100 pb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-100 pb-6 w-full">
         <div>
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">Resultados da Análise Completa</h2>
           <p className="text-sm sm:text-base text-gray-600 mt-2">
@@ -84,8 +84,8 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
         </Button>
       </div>
 
-      <div id="results-content" className="space-y-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div id="results-content" className="space-y-8 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
           <ResultCard
             title="Cenário Atual"
             data={[
@@ -93,7 +93,7 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
               { label: "Custo Mensal", value: formData.currentCost, colorClass: "text-red-600" },
               { label: "Resultado Líquido", value: results.currentRevenue - formData.currentCost, colorClass: "text-red-600" }
             ]}
-            className="border-red-100 shadow-red-50"
+            className="border-red-100 shadow-red-50 w-full"
           />
 
           <ResultCard
@@ -103,11 +103,11 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
               { label: "Custo Mensal", value: results.aiCost, colorClass: "text-green-600" },
               { label: "Resultado Líquido", value: results.aiRevenue - results.aiCost, colorClass: "text-green-600" }
             ]}
-            className="border-green-100 shadow-green-50"
+            className="border-green-100 shadow-green-50 w-full"
           />
         </div>
 
-        <div className="border-t border-b border-gray-100 py-8">
+        <div className="border-t border-b border-gray-100 py-8 w-full">
           <ComparisonChart data={results.comparisonData} />
         </div>
 
@@ -121,7 +121,7 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
 
         <motion.div 
           variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
-          className="text-center p-8 bg-gradient-to-b from-green-50 to-green-100 rounded-lg border border-green-200 shadow-sm"
+          className="text-center p-8 bg-gradient-to-b from-green-50 to-green-100 rounded-lg border border-green-200 shadow-sm w-full"
         >
           <h3 className="text-xl sm:text-2xl font-semibold mb-3 text-green-800">
             Potencialize seus Resultados com IA
