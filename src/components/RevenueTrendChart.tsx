@@ -23,8 +23,8 @@ export const RevenueTrendChart = ({ currentRevenue, aiRevenue }: RevenueTrendCha
   const data = generateMonthlyData();
 
   return (
-    <Card className="p-6 bg-white">
-      <h3 className="text-lg font-semibold mb-6">Tendência de Receita Anual</h3>
+    <Card className="p-6">
+      <h3 className="text-lg font-semibold mb-6 text-gray-800">Tendência de Receita Anual</h3>
       <div className="h-[300px]">
         <ChartContainer
           className="w-full"

@@ -61,11 +61,13 @@ export const ComparisonChart = ({ data }: ComparisonChartProps) => {
         </p>
       </Card>
 
-      {/* Gráfico de Tendências */}
-      <RevenueTrendChart 
-        currentRevenue={currentRevenue}
-        aiRevenue={aiRevenue}
-      />
+      {/* Gráfico de Tendências em uma nova linha */}
+      <div className="w-full mt-8">
+        <RevenueTrendChart 
+          currentRevenue={currentRevenue}
+          aiRevenue={aiRevenue}
+        />
+      </div>
     </div>
   );
 };
