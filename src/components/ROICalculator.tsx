@@ -42,8 +42,7 @@ export const ROICalculator = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (Object.entries(formData)
-        .filter(([key]) => key !== 'responseRate' && key !== 'meetingRate')
-        .some(([_, value]) => value === 0)) {
+        .some(([_, value]) => value === 0 || (["responseRate", "meetingRate"].includes(_) && value === 1))) {
       toast.error("Por favor, preencha todos os campos com valores válidos");
       return;
     }
@@ -56,12 +55,10 @@ export const ROICalculator = () => {
     setResults(pendingResults);
     setShowContactDialog(false);
     toast.success("Análise concluída com sucesso!");
-    console.log("Contact data:", contactData);
   };
 
   const allFieldsFilled = !Object.entries(formData)
-    .filter(([key]) => key !== 'responseRate' && key !== 'meetingRate')
-    .some(([_, value]) => value === 0);
+    .some(([key, value]) => value === 0 || (["responseRate", "meetingRate"].includes(key) && value === 1));
 
   return (
     <div className="w-full max-w-7xl mx-auto p-6 flex flex-col items-center animate-fadeIn">
@@ -156,7 +153,7 @@ export const ROICalculator = () => {
 
         <div className="border-2 border-dashed border-foreground/20 rounded-lg p-8 flex items-center justify-center min-h-[600px] bg-foreground/5">
           {results ? (
-            <ResultsDisplay results={results} />
+            <ResultsDisplay results={results} formData={formData} />
           ) : (
             <SummaryPreview {...formData} allFieldsFilled={allFieldsFilled} />
           )}
