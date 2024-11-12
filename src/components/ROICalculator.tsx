@@ -7,86 +7,26 @@ import { FormField } from "./FormField";
 import { ContactDialog, ContactFormData } from "./ContactDialog";
 import { SummaryPreview } from "./SummaryPreview";
 import { supabase } from "@/integrations/supabase/client";
-
-interface FormData {
-  monthlyLeads: number;
-  responseRate: number;
-  meetingRate: number;
-  currentCost: number;
-  leadValue: number;
-  meetingsToClose: number;
-}
-
-const initialFormData: FormData = {
-  monthlyLeads: 0,
-  responseRate: 1,
-  meetingRate: 1,
-  currentCost: 0,
-  leadValue: 0,
-  meetingsToClose: 0,
-};
+import { useROIForm } from "@/hooks/useROIForm";
+import { useROISubmission } from "@/hooks/useROISubmission";
 
 export const ROICalculator = () => {
-  const [formData, setFormData] = useState<FormData>(initialFormData);
-  const [results, setResults] = useState<any>(null);
-  const [showContactDialog, setShowContactDialog] = useState(false);
-  const [pendingResults, setPendingResults] = useState<any>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const {
+    formData,
+    handleSliderChange,
+    handleInputChange,
+    allFieldsFilled
+  } = useROIForm();
 
-  const handleSliderChange = (field: keyof FormData, value: number[]) => {
-    setFormData((prev) => ({ ...prev, [field]: value[0] }));
-  };
-
-  const handleInputChange = (field: keyof FormData) => (value: number) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (Object.entries(formData)
-        .some(([_, value]) => value === 0 || (["responseRate", "meetingRate"].includes(_) && value === 1))) {
-      toast.error("Por favor, preencha todos os campos com valores válidos");
-      return;
-    }
-    const calculatedResults = calculateROI(formData);
-    setPendingResults(calculatedResults);
-    setShowContactDialog(true);
-  };
-
-  const handleContactSubmit = async (contactData: ContactFormData) => {
-    setIsSubmitting(true);
-    try {
-      const { error } = await supabase
-        .from('roi_submissions')
-        .insert({
-          monthly_leads: formData.monthlyLeads,
-          response_rate: formData.responseRate,
-          meeting_rate: formData.meetingRate,
-          current_cost: formData.currentCost,
-          lead_value: formData.leadValue,
-          meetings_to_close: formData.meetingsToClose,
-          first_name: contactData.firstName,
-          last_name: contactData.lastName,
-          email: contactData.email,
-          phone: contactData.phone,
-          calculated_results: pendingResults
-        });
-
-      if (error) throw error;
-
-      setResults(pendingResults);
-      setShowContactDialog(false);
-      toast.success("Análise concluída com sucesso!");
-    } catch (error) {
-      console.error('Error saving submission:', error);
-      toast.error("Erro ao salvar os dados. Por favor, tente novamente.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const allFieldsFilled = !Object.entries(formData)
-    .some(([key, value]) => value === 0 || (["responseRate", "meetingRate"].includes(key) && value === 1));
+  const {
+    results,
+    showContactDialog,
+    setShowContactDialog,
+    handleSubmit,
+    handleContactSubmit,
+    isSubmitting,
+    reportUrl
+  } = useROISubmission(formData);
 
   return (
     <div className="w-full max-w-7xl mx-auto p-4 sm:p-6 flex flex-col items-center animate-fadeIn">
@@ -188,7 +128,24 @@ export const ROICalculator = () => {
 
         <div className="border-2 border-dashed border-foreground/20 rounded-lg p-8 flex items-center justify-center min-h-[600px] bg-foreground/5">
           {results ? (
-            <ResultsDisplay results={results} formData={formData} />
+            <>
+              <ResultsDisplay results={results} formData={formData} />
+              {reportUrl && (
+                <div className="mt-4 text-center">
+                  <p className="text-sm text-gray-600 mb-2">
+                    Link do seu relatório personalizado:
+                  </p>
+                  <a
+                    href={reportUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#ff6b00] hover:underline break-all"
+                  >
+                    {reportUrl}
+                  </a>
+                </div>
+              )}
+            </>
           ) : (
             <SummaryPreview {...formData} allFieldsFilled={allFieldsFilled} />
           )}
