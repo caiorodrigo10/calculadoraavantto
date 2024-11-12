@@ -11,7 +11,6 @@ interface FormFieldProps {
   onChange: (value: number) => void;
   prefix?: string;
   type?: "number" | "currency" | "percentage";
-  max?: number;
   step?: number;
   labelClassName?: string;
 }
@@ -23,7 +22,6 @@ export const FormField = ({
   onChange,
   prefix,
   type = "number",
-  max = 100,
   step = 1,
   labelClassName = "",
 }: FormFieldProps) => {
@@ -91,7 +89,6 @@ export const FormField = ({
           type="number"
           value={value || ""}
           onChange={handleChange}
-          max={max}
           step={step}
           className={`h-12 text-xl font-bold bg-background text-white border-white ${prefix ? 'pl-8' : ''}`}
           onWheel={(e) => e.currentTarget.blur()}
