@@ -18,8 +18,8 @@ interface FormData {
 
 const initialFormData: FormData = {
   monthlyLeads: 0,
-  responseRate: 0,
-  meetingRate: 0,
+  responseRate: 1,
+  meetingRate: 1,
   currentCost: 0,
   leadValue: 0,
   meetingsToClose: 0,
@@ -41,7 +41,9 @@ export const ROICalculator = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (Object.values(formData).some(value => value === 0)) {
+    if (Object.entries(formData)
+        .filter(([key]) => key !== 'responseRate' && key !== 'meetingRate')
+        .some(([_, value]) => value === 0)) {
       toast.error("Por favor, preencha todos os campos com valores válidos");
       return;
     }
@@ -57,7 +59,9 @@ export const ROICalculator = () => {
     console.log("Contact data:", contactData);
   };
 
-  const allFieldsFilled = !Object.values(formData).some(value => value === 0);
+  const allFieldsFilled = !Object.entries(formData)
+    .filter(([key]) => key !== 'responseRate' && key !== 'meetingRate')
+    .some(([_, value]) => value === 0);
 
   return (
     <div className="w-full max-w-7xl mx-auto p-6 flex flex-col items-center animate-fadeIn">
