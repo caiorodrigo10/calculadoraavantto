@@ -9,7 +9,54 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      roi_submissions: {
+        Row: {
+          calculated_results: Json
+          created_at: string
+          current_cost: number
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          lead_value: number
+          meeting_rate: number
+          meetings_to_close: number
+          monthly_leads: number
+          phone: string
+          response_rate: number
+        }
+        Insert: {
+          calculated_results: Json
+          created_at?: string
+          current_cost: number
+          email: string
+          first_name: string
+          id?: string
+          last_name: string
+          lead_value: number
+          meeting_rate: number
+          meetings_to_close: number
+          monthly_leads: number
+          phone: string
+          response_rate: number
+        }
+        Update: {
+          calculated_results?: Json
+          created_at?: string
+          current_cost?: number
+          email?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          lead_value?: number
+          meeting_rate?: number
+          meetings_to_close?: number
+          monthly_leads?: number
+          phone?: string
+          response_rate?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

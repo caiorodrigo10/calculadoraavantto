@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { FormField } from "./FormField";
 import { ContactDialog, ContactFormData } from "./ContactDialog";
 import { SummaryPreview } from "./SummaryPreview";
+import { supabase } from "@/integrations/supabase/client";
 
 interface FormData {
   monthlyLeads: number;
@@ -30,6 +31,7 @@ export const ROICalculator = () => {
   const [results, setResults] = useState<any>(null);
   const [showContactDialog, setShowContactDialog] = useState(false);
   const [pendingResults, setPendingResults] = useState<any>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSliderChange = (field: keyof FormData, value: number[]) => {
     setFormData((prev) => ({ ...prev, [field]: value[0] }));
@@ -51,10 +53,28 @@ export const ROICalculator = () => {
     setShowContactDialog(true);
   };
 
-  const handleContactSubmit = (contactData: ContactFormData) => {
-    setResults(pendingResults);
-    setShowContactDialog(false);
-    toast.success("Análise concluída com sucesso!");
+  const handleContactSubmit = async (contactData: ContactFormData) => {
+    setIsSubmitting(true);
+    try {
+      const { error } = await supabase
+        .from('roi_submissions')
+        .insert({
+          ...formData,
+          ...contactData,
+          calculated_results: pendingResults
+        });
+
+      if (error) throw error;
+
+      setResults(pendingResults);
+      setShowContactDialog(false);
+      toast.success("Análise concluída com sucesso!");
+    } catch (error) {
+      console.error('Error saving submission:', error);
+      toast.error("Erro ao salvar os dados. Por favor, tente novamente.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const allFieldsFilled = !Object.entries(formData)
@@ -171,6 +191,7 @@ export const ROICalculator = () => {
         open={showContactDialog}
         onOpenChange={setShowContactDialog}
         onSubmit={handleContactSubmit}
+        isSubmitting={isSubmitting}
       />
     </div>
   );

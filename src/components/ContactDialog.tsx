@@ -7,6 +7,7 @@ interface ContactDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (data: ContactFormData) => void;
+  isSubmitting?: boolean;
 }
 
 export interface ContactFormData {
@@ -16,7 +17,7 @@ export interface ContactFormData {
   phone: string;
 }
 
-export function ContactDialog({ open, onOpenChange, onSubmit }: ContactDialogProps) {
+export function ContactDialog({ open, onOpenChange, onSubmit, isSubmitting = false }: ContactDialogProps) {
   const [formData, setFormData] = useState<ContactFormData>({
     firstName: "",
     lastName: "",
@@ -49,6 +50,7 @@ export function ContactDialog({ open, onOpenChange, onSubmit }: ContactDialogPro
                 value={formData.firstName}
                 onChange={(e) => setFormData(prev => ({ ...prev, firstName: e.target.value }))}
                 required
+                disabled={isSubmitting}
               />
             </div>
             <div className="space-y-2">
@@ -60,6 +62,7 @@ export function ContactDialog({ open, onOpenChange, onSubmit }: ContactDialogPro
                 value={formData.lastName}
                 onChange={(e) => setFormData(prev => ({ ...prev, lastName: e.target.value }))}
                 required
+                disabled={isSubmitting}
               />
             </div>
           </div>
@@ -73,6 +76,7 @@ export function ContactDialog({ open, onOpenChange, onSubmit }: ContactDialogPro
               value={formData.email}
               onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
               required
+              disabled={isSubmitting}
             />
           </div>
           <div className="space-y-2">
@@ -85,10 +89,15 @@ export function ContactDialog({ open, onOpenChange, onSubmit }: ContactDialogPro
               value={formData.phone}
               onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
               required
+              disabled={isSubmitting}
             />
           </div>
-          <Button type="submit" className="w-full bg-[#ff6b00] hover:bg-[#ff6b00]/90">
-            Enviar Resultados
+          <Button 
+            type="submit" 
+            className="w-full bg-[#ff6b00] hover:bg-[#ff6b00]/90"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Enviando..." : "Enviar Resultados"}
           </Button>
         </form>
       </DialogContent>
