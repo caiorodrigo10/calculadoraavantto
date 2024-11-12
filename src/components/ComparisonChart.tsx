@@ -15,7 +15,7 @@ export const ComparisonChart = ({ data }: ComparisonChartProps) => {
   const annualSavings = monthlySavings * 12;
 
   return (
-    <div className="w-full space-y-8">
+    <div className="w-full space-y-8 mb-8">
       <h3 className="text-lg font-semibold mb-4">Comparativo de Desempenho</h3>
       
       {/* Números em Cards */}
@@ -57,7 +57,9 @@ export const ComparisonChart = ({ data }: ComparisonChartProps) => {
       </Card>
 
       {/* Gráfico de Tendências */}
-      <RevenueTrendChart />
+      <div className="mb-16">
+        <RevenueTrendChart />
+      </div>
     </div>
   );
 };
