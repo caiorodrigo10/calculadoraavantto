@@ -140,11 +140,13 @@ const Dashboard = () => {
           <Card key={submission.id} className="p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4 flex-1">
-                <div>
-                  <h3 className="font-medium">
+                <div className="flex items-center space-x-2">
+                  <span className="font-medium">
                     {submission.first_name} {submission.last_name}
-                  </h3>
-                  <p className="text-sm text-gray-500">{submission.email}</p>
+                  </span>
+                  <span className="text-sm text-gray-500">
+                    {submission.email}
+                  </span>
                 </div>
                 <span className="text-sm text-gray-500">
                   {format(new Date(submission.created_at), "dd/MM/yyyy", { locale: ptBR })}
