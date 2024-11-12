@@ -83,7 +83,7 @@ export const FormField = ({
       </div>
       <div className="relative">
         {prefix && (
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-black pr-1">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white pr-1">
             {prefix}
           </span>
         )}
@@ -93,7 +93,7 @@ export const FormField = ({
           onChange={handleChange}
           max={max}
           step={step}
-          className={`h-12 text-xl font-bold bg-white text-black ${prefix ? 'pl-8' : ''}`}
+          className={`h-12 text-xl font-bold bg-background text-white border-white ${prefix ? 'pl-8' : ''}`}
         />
       </div>
     </div>

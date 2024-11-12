@@ -8,8 +8,8 @@ interface FormData {
 }
 
 export const calculateROI = (data: FormData) => {
-  // Base calculations
-  const aiCost = data.currentCost * 0.4;
+  // Base calculations with fixed AI cost
+  const aiCost = 997; // Fixed monthly AI cost
   const annualSavings = (data.currentCost - aiCost) * 12;
   
   // Calculate revenues with improved rates for AI (35% improvement)

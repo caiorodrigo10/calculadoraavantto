@@ -49,7 +49,7 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
         <Button
           onClick={handleDownload}
           variant="outline"
-          className="flex items-center gap-2 text-gray-600"
+          className="flex items-center gap-2 text-white border-white hover:text-white"
         >
           <Download className="h-4 w-4" />
           Baixar Relatório
