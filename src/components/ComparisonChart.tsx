@@ -42,7 +42,7 @@ export const ComparisonChart = ({ data }: ComparisonChartProps) => {
             <h4 className="text-lg font-medium mb-4">{item.name}</h4>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">Humano</span>
+                <span className="text-foreground">Humano</span>
                 <span className="text-xl font-bold text-destructive">
                   {item.name === "Custo Mensal" 
                     ? `R$ ${item.humano.toLocaleString()}`
@@ -50,7 +50,7 @@ export const ComparisonChart = ({ data }: ComparisonChartProps) => {
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">IA</span>
+                <span className="text-foreground">IA</span>
                 <span className="text-xl font-bold text-green-500">
                   {item.name === "Custo Mensal"
                     ? `R$ ${item.ia.toLocaleString()}`
@@ -113,7 +113,7 @@ export const ComparisonChart = ({ data }: ComparisonChartProps) => {
                       return (
                         <div className="bg-background p-2 border border-border rounded-lg shadow-lg">
                           {payload.map((entry) => (
-                            <div key={entry.name} className="text-sm">
+                            <div key={entry.name} className="text-sm text-foreground">
                               <span className="font-medium">{entry.name}: </span>
                               <span>R$ {entry.value.toLocaleString()}</span>
                             </div>
