@@ -54,7 +54,7 @@ export const ROICalculator = () => {
     <div className="w-full max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fadeIn">
       <div className="space-y-8">
         <div className="space-y-2">
-          <h1 className="text-4xl font-normal">
+          <h1 className="text-3xl font-normal">
             Qual é o Custo da IA vs. Agendadores Humanos?
           </h1>
           <p className="text-lg text-foreground/80">
@@ -75,7 +75,7 @@ export const ROICalculator = () => {
 
           <div className="input-group">
             <div className="flex items-center space-x-2 mb-2">
-              <Label htmlFor="responseRate" className="text-xl font-normal">Taxa Média de Resposta Atual (%)</Label>
+              <Label htmlFor="responseRate" className="text-lg font-normal">Taxa Média de Resposta Atual (%)</Label>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
@@ -101,7 +101,7 @@ export const ROICalculator = () => {
 
           <div className="input-group">
             <div className="flex items-center space-x-2 mb-2">
-              <Label htmlFor="meetingRate" className="text-xl font-normal">Taxa de Leads que Agendam uma Reunião (%)</Label>
+              <Label htmlFor="meetingRate" className="text-lg font-normal">Taxa de Leads que Agendam uma Reunião (%)</Label>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>

@@ -34,7 +34,7 @@ export const FormField = ({
   return (
     <div className="input-group">
       <div className="flex items-center space-x-2 mb-2">
-        <Label htmlFor={label} className={`text-xl font-normal ${labelClassName}`}>{label}</Label>
+        <Label htmlFor={label} className={`text-lg font-normal ${labelClassName}`}>{label}</Label>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
