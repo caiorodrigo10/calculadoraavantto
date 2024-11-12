@@ -20,7 +20,10 @@ export const ResultCard = ({ title, data, className = "" }: ResultCardProps) => 
             <span className="text-sm sm:text-base text-gray-600">{item.label}</span>
             <span className={`text-lg sm:text-xl font-bold ${item.colorClass}`}>
               {typeof item.value === 'number' ? 
-                `R$ ${item.value.toLocaleString()}` : 
+                new Intl.NumberFormat('pt-BR', {
+                  style: 'currency',
+                  currency: 'BRL',
+                }).format(item.value) : 
                 item.value
               }
             </span>
