@@ -8,6 +8,7 @@ import { calculateROI } from "@/lib/calculations";
 import { ResultsDisplay } from "./ResultsDisplay";
 import { toast } from "sonner";
 import { FormField } from "./FormField";
+import { ContactDialog, ContactFormData } from "./ContactDialog";
 
 interface FormData {
   monthlyLeads: number;
@@ -30,6 +31,8 @@ const initialFormData: FormData = {
 export const ROICalculator = () => {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [results, setResults] = useState<any>(null);
+  const [showContactDialog, setShowContactDialog] = useState(false);
+  const [pendingResults, setPendingResults] = useState<any>(null);
 
   const handleSliderChange = (field: keyof FormData, value: number[]) => {
     setFormData((prev) => ({ ...prev, [field]: value[0] }));
@@ -46,9 +49,19 @@ export const ROICalculator = () => {
       return;
     }
     const calculatedResults = calculateROI(formData);
-    setResults(calculatedResults);
-    toast.success("Análise concluída com sucesso!");
+    setPendingResults(calculatedResults);
+    setShowContactDialog(true);
   };
+
+  const handleContactSubmit = (contactData: ContactFormData) => {
+    setResults(pendingResults);
+    setShowContactDialog(false);
+    toast.success("Análise concluída com sucesso!");
+    // Here you would typically send the contact data to your backend
+    console.log("Contact data:", contactData);
+  };
+
+  // ... keep existing code (JSX for the header section)
 
   return (
     <div className="w-full max-w-7xl mx-auto p-6 flex flex-col items-center animate-fadeIn">
@@ -194,6 +207,12 @@ export const ROICalculator = () => {
           )}
         </div>
       </div>
+
+      <ContactDialog
+        open={showContactDialog}
+        onOpenChange={setShowContactDialog}
+        onSubmit={handleContactSubmit}
+      />
     </div>
   );
 };
