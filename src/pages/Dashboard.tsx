@@ -7,6 +7,14 @@ import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('pt-BR', {
@@ -134,33 +142,40 @@ const Dashboard = () => {
         </Card>
       </div>
 
-      <h2 className="text-2xl font-bold mb-4">Submissões Recentes</h2>
-      <div className="space-y-4">
-        {recentSubmissions?.map((submission) => (
-          <Card key={submission.id} className="p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4 flex-1">
-                <div className="flex items-center space-x-2">
-                  <span className="font-medium">
-                    {submission.first_name} {submission.last_name}
-                  </span>
-                  <span className="text-sm text-gray-500">
-                    {submission.email}
-                  </span>
-                </div>
-                <span className="text-sm text-gray-500">
-                  {format(new Date(submission.created_at), "dd/MM/yyyy", { locale: ptBR })}
-                </span>
-              </div>
-              <Button
-                size="sm"
-                onClick={() => navigate(`/report/${submission.id}`)}
-              >
-                Ver Relatório
-              </Button>
-            </div>
-          </Card>
-        ))}
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Nome</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Data</TableHead>
+              <TableHead className="text-right">Ações</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {recentSubmissions?.map((submission) => (
+              <TableRow key={submission.id}>
+                <TableCell className="font-medium">
+                  {submission.first_name} {submission.last_name}
+                </TableCell>
+                <TableCell>{submission.email}</TableCell>
+                <TableCell>
+                  {format(new Date(submission.created_at), "dd/MM/yyyy", {
+                    locale: ptBR,
+                  })}
+                </TableCell>
+                <TableCell className="text-right">
+                  <Button
+                    size="sm"
+                    onClick={() => navigate(`/report/${submission.id}`)}
+                  >
+                    Ver Relatório
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
     </div>
   );
