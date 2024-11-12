@@ -23,17 +23,12 @@ export const FormField = ({
   onChange,
   prefix,
   type = "number",
-  max,
+  max = 100,
   step = 1,
   labelClassName = "",
 }: FormFieldProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value) || 0;
-    // Remover validação de valor máximo para campos não percentuais
-    if (type === "percentage" && value > 100) {
-      onChange(100);
-      return;
-    }
     onChange(value);
   };
 
@@ -96,6 +91,7 @@ export const FormField = ({
           type="number"
           value={value || ""}
           onChange={handleChange}
+          max={max}
           step={step}
           className={`h-12 text-xl font-bold bg-background text-white border-white ${prefix ? 'pl-8' : ''}`}
           onWheel={(e) => e.currentTarget.blur()}

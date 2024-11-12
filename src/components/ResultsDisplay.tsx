@@ -56,7 +56,7 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
 
   return (
     <motion.div 
-      className="w-full space-y-8 bg-white p-6 sm:p-8 rounded-lg shadow-lg"
+      className="space-y-4 sm:space-y-6 w-full bg-white p-4 sm:p-8 rounded-lg shadow-sm"
       initial="hidden"
       animate="show"
       variants={{
@@ -67,13 +67,8 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
         }
       }}
     >
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-100 pb-6 w-full">
-        <div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">Resultados da Análise Completa</h2>
-          <p className="text-sm sm:text-base text-gray-600 mt-2">
-            Análise baseada nos dados fornecidos por você
-          </p>
-        </div>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Resultados da Análise Completa</h2>
         <Button
           onClick={handleDownload}
           variant="outline"
@@ -84,8 +79,12 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
         </Button>
       </div>
 
-      <div id="results-content" className="space-y-8 w-full">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+      <div id="results-content" className="space-y-4 sm:space-y-6">
+        <p className="text-sm sm:text-base text-gray-600">
+          Análise baseada nos dados fornecidos por você
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <ResultCard
             title="Cenário Atual"
             data={[
@@ -93,7 +92,6 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
               { label: "Custo Mensal", value: formData.currentCost, colorClass: "text-red-600" },
               { label: "Resultado Líquido", value: results.currentRevenue - formData.currentCost, colorClass: "text-red-600" }
             ]}
-            className="border-red-100 shadow-red-50 w-full"
           />
 
           <ResultCard
@@ -103,35 +101,33 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
               { label: "Custo Mensal", value: results.aiCost, colorClass: "text-green-600" },
               { label: "Resultado Líquido", value: results.aiRevenue - results.aiCost, colorClass: "text-green-600" }
             ]}
-            className="border-green-100 shadow-green-50 w-full"
           />
         </div>
 
-        <div className="border-t border-b border-gray-100 py-8 w-full">
+        <motion.div variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}>
           <ComparisonChart data={results.comparisonData} />
-        </div>
+        </motion.div>
 
         <InsightsSection
           roi={results.roi}
           paybackPeriod={results.paybackPeriod}
           additionalLeadsPerYear={results.additionalLeadsPerYear}
           profitPerLead={results.profitPerLead}
-          formData={formData}
         />
 
         <motion.div 
           variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
-          className="text-center p-8 bg-gradient-to-b from-green-50 to-green-100 rounded-lg border border-green-200 shadow-sm w-full"
+          className="text-center p-4 sm:p-8 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border border-gray-200"
         >
-          <h3 className="text-xl sm:text-2xl font-semibold mb-3 text-green-800">
+          <h3 className="text-lg sm:text-xl font-semibold mb-2 text-gray-800">
             Potencialize seus Resultados com IA
           </h3>
-          <p className="text-base sm:text-lg mb-6 text-green-700">
+          <p className="text-sm sm:text-lg mb-4 text-gray-600">
             Agende uma reunião com nossos especialistas e descubra como implementar 
             essa solução em sua empresa.
           </p>
           <Button 
-            className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white text-base sm:text-lg px-8 sm:px-10 py-6"
+            className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6"
             onClick={() => window.open('#', '_blank')}
           >
             Agendar Demonstração
