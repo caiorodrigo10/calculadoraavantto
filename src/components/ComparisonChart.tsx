@@ -14,6 +14,11 @@ export const ComparisonChart = ({ data }: ComparisonChartProps) => {
   const monthlySavings = 5000 - 997; // Difference between human and AI cost
   const annualSavings = monthlySavings * 12;
 
+  // Find the revenue values from the data array
+  const revenueData = data.find(item => item.name === "Custo Mensal");
+  const currentRevenue = revenueData?.humano || 0;
+  const aiRevenue = revenueData?.ia || 0;
+
   return (
     <div className="w-full space-y-8">
       <h3 className="text-lg font-semibold mb-4">Comparativo de Desempenho</h3>
@@ -57,7 +62,10 @@ export const ComparisonChart = ({ data }: ComparisonChartProps) => {
       </Card>
 
       {/* Gráfico de Tendências */}
-      <RevenueTrendChart />
+      <RevenueTrendChart 
+        currentRevenue={currentRevenue}
+        aiRevenue={aiRevenue}
+      />
     </div>
   );
 };
