@@ -14,21 +14,30 @@ export const DashboardStats = () => {
       
       if (error) throw error;
 
-      const totalLeads = submissions?.reduce((sum, item) => sum + item.monthly_leads, 0) || 0;
-      const avgLeadsPerSubmission = Math.round(totalLeads / (submissions?.length || 1));
-      const avgTeamCost = submissions?.reduce((sum, item) => sum + item.current_cost, 0) / (submissions?.length || 1);
+      if (!submissions || submissions.length === 0) {
+        return {
+          avgLeadsPerSubmission: 0,
+          avgTeamCost: 0,
+          annualProfitPotential: 0,
+          totalSubmissions: 0,
+        };
+      }
+
+      const totalLeads = submissions.reduce((sum, item) => sum + (item.monthly_leads || 0), 0);
+      const avgLeadsPerSubmission = Math.round(totalLeads / submissions.length);
+      const avgTeamCost = submissions.reduce((sum, item) => sum + (item.current_cost || 0), 0) / submissions.length;
       
       // Calculate average annual profit potential
-      const annualProfitPotential = submissions?.reduce((sum, item) => {
-        const monthlyProfit = (item.monthly_leads * item.lead_value) - item.current_cost;
+      const annualProfitPotential = submissions.reduce((sum, item) => {
+        const monthlyProfit = ((item.monthly_leads || 0) * (item.lead_value || 0)) - (item.current_cost || 0);
         return sum + (monthlyProfit * 12);
-      }, 0) / (submissions?.length || 1);
+      }, 0) / submissions.length;
 
       return {
         avgLeadsPerSubmission,
         avgTeamCost,
         annualProfitPotential,
-        totalSubmissions: submissions?.length || 0,
+        totalSubmissions: submissions.length,
       };
     },
   });
@@ -41,31 +50,40 @@ export const DashboardStats = () => {
     </div>;
   }
 
+  const defaultStats = {
+    avgLeadsPerSubmission: 0,
+    avgTeamCost: 0,
+    annualProfitPotential: 0,
+    totalSubmissions: 0,
+  };
+
+  const safeStats = stats || defaultStats;
+
   const cards = [
     {
       title: "Média de Leads por Cliente",
-      value: stats?.avgLeadsPerSubmission.toLocaleString(),
+      value: safeStats.avgLeadsPerSubmission.toLocaleString(),
       icon: Users,
       color: "text-blue-600",
       bgColor: "bg-blue-50",
     },
     {
       title: "Custo Médio de Equipe",
-      value: `R$ ${stats?.avgTeamCost.toLocaleString(undefined, { maximumFractionDigits: 2 })}`,
+      value: `R$ ${safeStats.avgTeamCost.toLocaleString(undefined, { maximumFractionDigits: 2 })}`,
       icon: DollarSign,
       color: "text-green-600",
       bgColor: "bg-green-50",
     },
     {
       title: "Potencial de Lucro Anual",
-      value: `R$ ${stats?.annualProfitPotential.toLocaleString(undefined, { maximumFractionDigits: 2 })}`,
+      value: `R$ ${safeStats.annualProfitPotential.toLocaleString(undefined, { maximumFractionDigits: 2 })}`,
       icon: TrendingUp,
       color: "text-purple-600",
       bgColor: "bg-purple-50",
     },
     {
       title: "Total de Análises",
-      value: stats?.totalSubmissions.toLocaleString(),
+      value: safeStats.totalSubmissions.toLocaleString(),
       icon: PiggyBank,
       color: "text-orange-600",
       bgColor: "bg-orange-50",
