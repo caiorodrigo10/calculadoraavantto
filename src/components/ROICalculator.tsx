@@ -86,9 +86,9 @@ export const ROICalculator = () => {
         </div>
       </div>
 
-      <div className="w-full grid grid-cols-1 lg:grid-cols-[40%_60%] gap-8">
+      <div className="w-full grid grid-cols-1 lg:grid-cols-[28%_72%] gap-8">
         <div className="space-y-6">
-          <form onSubmit={handleSubmit} className="space-y-6 max-w-md">
+          <form onSubmit={handleSubmit} className="space-y-6 max-w-[280px] mx-auto">
             <FormField
               label="Total de Leads Mensais Inbound"
               tooltipText="Total de leads recebidos mensalmente"
@@ -96,7 +96,7 @@ export const ROICalculator = () => {
               onChange={handleInputChange("monthlyLeads")}
               max={10000}
               step={100}
-              labelClassName="font-normal"
+              labelClassName="font-normal text-base"
             />
             <FormField
               label="Taxa Média de Resposta Atual (%)"
@@ -104,7 +104,7 @@ export const ROICalculator = () => {
               value={formData.responseRate}
               onChange={handleInputChange("responseRate")}
               type="percentage"
-              labelClassName="font-normal"
+              labelClassName="font-normal text-base"
             />
             <FormField
               label="Taxa de Leads que Agendam uma Reunião (%)"
@@ -112,7 +112,7 @@ export const ROICalculator = () => {
               value={formData.meetingRate}
               onChange={handleInputChange("meetingRate")}
               type="percentage"
-              labelClassName="font-normal"
+              labelClassName="font-normal text-base"
             />
             <FormField
               label="Custo Mensal Atual de Agendadores Humanos"
@@ -122,7 +122,7 @@ export const ROICalculator = () => {
               prefix="R$"
               max={50000}
               step={100}
-              labelClassName="font-normal"
+              labelClassName="font-normal text-base"
             />
             <FormField
               label="Valor de um Lead Fechado"
@@ -132,7 +132,7 @@ export const ROICalculator = () => {
               prefix="R$"
               max={100000}
               step={1000}
-              labelClassName="font-normal"
+              labelClassName="font-normal text-base"
             />
             <FormField
               label="Reuniões Necessárias para Fechar um Lead"
@@ -140,7 +140,7 @@ export const ROICalculator = () => {
               value={formData.meetingsToClose}
               onChange={handleInputChange("meetingsToClose")}
               step={1}
-              labelClassName="font-normal"
+              labelClassName="font-normal text-base"
             />
             <Button
               type="submit"
