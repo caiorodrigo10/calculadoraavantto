@@ -85,18 +85,53 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <ComparisonCard
-            title="Cenário Atual"
-            humanValue={results.currentRevenue}
-            aiValue={formData.currentCost}
-            prefix="R$ "
-          />
-          <ComparisonCard
-            title="Com IA"
-            humanValue={results.aiRevenue}
-            aiValue={results.aiCost}
-            prefix="R$ "
-          />
+          <Card className="p-6 bg-white border border-gray-200 shadow-sm">
+            <h3 className="text-lg font-semibold mb-4 text-gray-800">Cenário Atual</h3>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Receita Potencial</span>
+                <span className="text-xl font-bold text-red-600">
+                  R$ {results.currentRevenue.toLocaleString()}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Custo Mensal</span>
+                <span className="text-xl font-bold text-red-600">
+                  R$ {formData.currentCost.toLocaleString()}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Resultado Líquido</span>
+                <span className="text-xl font-bold text-red-600">
+                  R$ {(results.currentRevenue - formData.currentCost).toLocaleString()}
+                </span>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-6 bg-white border border-gray-200 shadow-sm">
+            <h3 className="text-lg font-semibold mb-4 text-gray-800">Com IA</h3>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Receita Potencial</span>
+                <span className="text-xl font-bold text-green-600">
+                  R$ {results.aiRevenue.toLocaleString()}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Custo Mensal</span>
+                <span className="text-xl font-bold text-green-600">
+                  R$ {results.aiCost.toLocaleString()}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Resultado Líquido</span>
+                <span className="text-xl font-bold text-green-600">
+                  R$ {(results.aiRevenue - results.aiCost).toLocaleString()}
+                </span>
+              </div>
+            </div>
+          </Card>
         </div>
 
         <motion.div variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}>
