@@ -123,40 +123,40 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
           <h3 className="text-lg font-semibold mb-4">Insights Adicionais</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="space-y-4">
-              <h4 className="font-medium text-gray-700">Impacto Financeiro</h4>
+              <h4 className="font-medium text-foreground">Impacto Financeiro</h4>
               <div>
                 <p className="text-2xl font-bold text-green-600">{Math.round(results.roi)}%</p>
-                <p className="text-sm text-gray-600">Retorno sobre investimento</p>
+                <p className="text-sm text-foreground">Retorno sobre investimento</p>
               </div>
               <div>
                 <p className="text-2xl font-bold text-green-600">{results.paybackPeriod} meses</p>
-                <p className="text-sm text-gray-600">Tempo de retorno do investimento</p>
+                <p className="text-sm text-foreground">Tempo de retorno do investimento</p>
               </div>
             </div>
             
             <div className="space-y-4">
-              <h4 className="font-medium text-gray-700">Benefícios Operacionais</h4>
+              <h4 className="font-medium text-foreground">Benefícios Operacionais</h4>
               <div>
                 <p className="text-2xl font-bold text-blue-600">24/7</p>
-                <p className="text-sm text-gray-600">Atendimento contínuo</p>
+                <p className="text-sm text-foreground">Atendimento contínuo</p>
               </div>
               <div>
                 <p className="text-2xl font-bold text-blue-600">-70%</p>
-                <p className="text-sm text-gray-600">Redução no tempo de resposta</p>
+                <p className="text-sm text-foreground">Redução no tempo de resposta</p>
               </div>
             </div>
 
             <div className="space-y-4">
-              <h4 className="font-medium text-gray-700">Eficiência e Produtividade</h4>
+              <h4 className="font-medium text-foreground">Eficiência e Produtividade</h4>
               <div>
                 <p className="text-2xl font-bold text-blue-600">+{results.additionalLeadsPerYear}</p>
-                <p className="text-sm text-gray-600">Leads adicionais por ano</p>
+                <p className="text-sm text-foreground">Leads adicionais por ano</p>
               </div>
               <div>
                 <p className="text-2xl font-bold text-blue-600">
                   R$ {Math.round(results.profitPerLead).toLocaleString()}
                 </p>
-                <p className="text-sm text-gray-600">Lucro adicional por lead</p>
+                <p className="text-sm text-foreground">Lucro adicional por lead</p>
               </div>
             </div>
           </div>
