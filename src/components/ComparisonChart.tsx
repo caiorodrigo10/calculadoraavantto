@@ -1,5 +1,6 @@
 import { ChartContainer } from "@/components/ui/chart";
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
+import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
+import { Card } from "./ui/card";
 
 interface ComparisonChartProps {
   data: {
@@ -25,6 +26,10 @@ const monthlyData = [
 ];
 
 export const ComparisonChart = ({ data }: ComparisonChartProps) => {
+  // Calculate annual savings
+  const monthlySavings = 5000 - 997; // Difference between human and AI cost
+  const annualSavings = monthlySavings * 12;
+
   return (
     <div className="w-full space-y-8">
       <h3 className="text-lg font-semibold mb-4">Comparativo de Desempenho</h3>
@@ -68,7 +73,7 @@ export const ComparisonChart = ({ data }: ComparisonChartProps) => {
             }}
           >
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={monthlyData} barGap={8}>
+              <LineChart data={monthlyData}>
                 <XAxis 
                   dataKey="month"
                   stroke="#888888"
@@ -83,17 +88,23 @@ export const ComparisonChart = ({ data }: ComparisonChartProps) => {
                   axisLine={false}
                   tickFormatter={(value) => `R$ ${value}`}
                 />
-                <Bar
+                <Line
+                  type="monotone"
                   dataKey="humano"
                   name="Humano"
-                  fill="var(--color-humano)"
-                  radius={[4, 4, 0, 0]}
+                  stroke="#ef4444"
+                  strokeWidth={2}
+                  dot={false}
+                  fill="url(#humanGradient)"
                 />
-                <Bar
+                <Line
+                  type="monotone"
                   dataKey="ia"
                   name="IA"
-                  fill="var(--color-ia)"
-                  radius={[4, 4, 0, 0]}
+                  stroke="#22c55e"
+                  strokeWidth={2}
+                  dot={false}
+                  fill="url(#iaGradient)"
                 />
                 <Tooltip 
                   content={({ active, payload }) => {
@@ -112,11 +123,22 @@ export const ComparisonChart = ({ data }: ComparisonChartProps) => {
                     return null;
                   }}
                 />
-              </BarChart>
+              </LineChart>
             </ResponsiveContainer>
           </ChartContainer>
         </div>
       </div>
+
+      {/* Card de Economia Anual */}
+      <Card className="p-6 bg-green-50 border-green-200">
+        <h4 className="text-xl font-semibold text-green-800 mb-2">Economia Anual Projetada</h4>
+        <p className="text-3xl font-bold text-green-600">
+          R$ {annualSavings.toLocaleString()}
+        </p>
+        <p className="text-sm text-green-700 mt-2">
+          Valor estimado de economia ao substituir agendadores humanos por IA
+        </p>
+      </Card>
     </div>
   );
 };
