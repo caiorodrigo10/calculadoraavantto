@@ -48,7 +48,7 @@ export const FormField = ({
       </div>
       <div className="relative">
         {prefix && (
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/60">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-black">
             {prefix}
           </span>
         )}
