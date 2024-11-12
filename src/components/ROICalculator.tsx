@@ -52,14 +52,29 @@ export const ROICalculator = () => {
 
   return (
     <div className="w-full max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fadeIn">
-      <div className="space-y-8">
-        <div className="space-y-2">
-          <h1 className="text-3xl font-normal">
+      <div className="space-y-12">
+        <div className="text-center space-y-6">
+          <h1 className="text-5xl font-normal leading-tight">
             Qual é o Custo da IA vs. Agendadores Humanos?
           </h1>
-          <p className="text-lg text-foreground/80">
+          <p className="text-2xl text-foreground/80 max-w-3xl mx-auto">
             Calcule para saber o momento certo de migrar para uma solução de qualificação e agendamento de leads automatizada.
           </p>
+          <div className="flex items-center justify-center gap-4 pt-6">
+            <Button
+              variant="outline"
+              className="text-lg px-6 py-6 border-white hover:bg-white/10"
+              onClick={() => window.open('#', '_blank')}
+            >
+              Leia sobre este relatório
+            </Button>
+            <Button
+              className="text-lg px-6 py-6 bg-[#ff6b00] hover:bg-[#ff6b00]/90"
+              onClick={() => window.open('#', '_blank')}
+            >
+              Obtenha seu bot grátis agora
+            </Button>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
