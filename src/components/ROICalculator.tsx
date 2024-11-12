@@ -95,7 +95,7 @@ export const ROICalculator = () => {
                 value={[formData.responseRate]}
                 onValueChange={(value) => handleSliderChange("responseRate", value)}
               />
-              <span className="value-display text-xl font-bold">{formData.responseRate}%</span>
+              <span className="value-display text-xl font-bold text-[#ff6b00]">{formData.responseRate}%</span>
             </div>
           </div>
 
@@ -121,7 +121,7 @@ export const ROICalculator = () => {
                 value={[formData.meetingRate]}
                 onValueChange={(value) => handleSliderChange("meetingRate", value)}
               />
-              <span className="value-display text-xl font-bold">{formData.meetingRate}%</span>
+              <span className="value-display text-xl font-bold text-[#ff6b00]">{formData.meetingRate}%</span>
             </div>
           </div>
 
