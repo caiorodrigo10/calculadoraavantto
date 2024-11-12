@@ -1,56 +1,60 @@
-import { Card } from "@/components/ui/card";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-} from "recharts";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from "recharts";
 
 interface ComparisonChartProps {
-  data: Array<{
+  data: {
     name: string;
     humano: number;
     ia: number;
-  }>;
+  }[];
 }
 
 export const ComparisonChart = ({ data }: ComparisonChartProps) => {
-  const chartHeight = 300;
-  
+  const charts = [
+    { title: "Custo Mensal", dataKey: "Custo Mensal" },
+    { title: "Leads Qualificados", dataKey: "Leads Qualificados" },
+    { title: "Reuniões Agendadas", dataKey: "Reuniões Agendadas" }
+  ];
+
   return (
-    <div className="space-y-6">
-      {data.map((item, index) => (
-        <Card key={index} className="p-4 border border-gray-200">
-          <h4 className="text-lg font-medium mb-4">{item.name}</h4>
-          <div className="h-[300px]">
-            <ResponsiveContainer width="100%" height={chartHeight}>
-              <BarChart data={[item]} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar
-                  dataKey="humano"
-                  name="Agendadores Humanos"
-                  fill="#ef4444"
-                  radius={[4, 4, 0, 0]}
-                />
-                <Bar
-                  dataKey="ia"
-                  name="Inteligência Artificial"
-                  fill="#22c55e"
-                  radius={[4, 4, 0, 0]}
-                />
-              </BarChart>
-            </ResponsiveContainer>
+    <div className="w-full space-y-4">
+      <h3 className="text-lg font-semibold mb-4">Comparativo de Desempenho</h3>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {data.map((item, index) => (
+          <div key={item.name} className="w-full h-[300px]">
+            <p className="text-sm font-medium mb-2">{item.name}</p>
+            <ChartContainer
+              className="w-full"
+              config={{
+                humano: { color: "#ef4444" },
+                ia: { color: "#22c55e" }
+              }}
+            >
+              <ResponsiveContainer width="100%" height={250}>
+                <BarChart data={[item]} barGap={8}>
+                  <XAxis dataKey="name" hide />
+                  <YAxis />
+                  <Bar
+                    dataKey="humano"
+                    name="Humano"
+                    fill="var(--color-humano)"
+                    radius={[4, 4, 0, 0]}
+                  />
+                  <Bar
+                    dataKey="ia"
+                    name="IA"
+                    fill="var(--color-ia)"
+                    radius={[4, 4, 0, 0]}
+                  />
+                  <ChartTooltip>
+                    <ChartTooltipContent />
+                  </ChartTooltip>
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartContainer>
           </div>
-        </Card>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };
