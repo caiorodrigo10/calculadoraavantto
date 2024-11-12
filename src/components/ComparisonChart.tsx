@@ -1,4 +1,5 @@
 import { Card } from "./ui/card";
+import { RevenueTrendChart } from "./RevenueTrendChart";
 
 interface ComparisonChartProps {
   data: {
@@ -54,6 +55,9 @@ export const ComparisonChart = ({ data }: ComparisonChartProps) => {
           Valor estimado de economia ao substituir agendadores humanos por IA
         </p>
       </Card>
+
+      {/* Gráfico de Tendências */}
+      <RevenueTrendChart />
     </div>
   );
 };
