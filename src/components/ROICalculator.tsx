@@ -181,7 +181,18 @@ export const ROICalculator = () => {
           </form>
         </div>
 
-        <ResultsDisplay results={results} />
+        <div className="border-2 border-dashed border-foreground/20 rounded-lg p-8 flex items-center justify-center min-h-[600px] bg-foreground/5">
+          {results ? (
+            <ResultsDisplay results={results} />
+          ) : (
+            <div className="text-center space-y-4">
+              <div className="text-4xl text-foreground/40">📊</div>
+              <p className="text-lg text-foreground/60">
+                Os resultados da sua análise aparecerão aqui após preencher e enviar o formulário
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
