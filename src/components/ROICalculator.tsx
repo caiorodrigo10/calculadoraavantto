@@ -1,14 +1,11 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
-import { Label } from "@/components/ui/label";
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
-import { HelpCircle } from "lucide-react";
 import { calculateROI } from "@/lib/calculations";
 import { ResultsDisplay } from "./ResultsDisplay";
 import { toast } from "sonner";
 import { FormField } from "./FormField";
 import { ContactDialog, ContactFormData } from "./ContactDialog";
+import { SummaryPreview } from "./SummaryPreview";
 
 interface FormData {
   monthlyLeads: number;
@@ -57,11 +54,10 @@ export const ROICalculator = () => {
     setResults(pendingResults);
     setShowContactDialog(false);
     toast.success("Análise concluída com sucesso!");
-    // Here you would typically send the contact data to your backend
     console.log("Contact data:", contactData);
   };
 
-  // ... keep existing code (JSX for the header section)
+  const allFieldsFilled = !Object.values(formData).some(value => value === 0);
 
   return (
     <div className="w-full max-w-7xl mx-auto p-6 flex flex-col items-center animate-fadeIn">
@@ -101,59 +97,24 @@ export const ROICalculator = () => {
               step={100}
               labelClassName="font-normal"
             />
-
-            <div className="input-group">
-              <div className="flex items-center space-x-2 mb-2">
-                <Label htmlFor="responseRate" className="text-lg font-normal">Taxa Média de Resposta Atual (%)</Label>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <HelpCircle className="h-4 w-4 text-foreground/60" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p className="w-64">Porcentagem de leads que respondem</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-              <div className="slider-wrapper">
-                <Slider
-                  id="responseRate"
-                  max={100}
-                  step={1}
-                  value={[formData.responseRate]}
-                  onValueChange={(value) => handleSliderChange("responseRate", value)}
-                />
-                <span className="value-display text-2xl font-bold text-[#ff6b00]">{formData.responseRate}%</span>
-              </div>
-            </div>
-
-            <div className="input-group">
-              <div className="flex items-center space-x-2 mb-2">
-                <Label htmlFor="meetingRate" className="text-lg font-normal">Taxa de Leads que Agendam uma Reunião (%)</Label>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <HelpCircle className="h-4 w-4 text-foreground/60" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p className="w-64">Porcentagem de leads que agendam reunião</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-              <div className="slider-wrapper">
-                <Slider
-                  id="meetingRate"
-                  max={100}
-                  step={1}
-                  value={[formData.meetingRate]}
-                  onValueChange={(value) => handleSliderChange("meetingRate", value)}
-                />
-                <span className="value-display text-2xl font-bold text-[#ff6b00]">{formData.meetingRate}%</span>
-              </div>
-            </div>
-
+            <FormField
+              label="Taxa Média de Resposta Atual (%)"
+              tooltipText="Porcentagem de leads que respondem"
+              value={formData.responseRate}
+              onChange={handleInputChange("responseRate")}
+              max={100}
+              step={1}
+              labelClassName="font-normal"
+            />
+            <FormField
+              label="Taxa de Leads que Agendam uma Reunião (%)"
+              tooltipText="Porcentagem de leads que agendam reunião"
+              value={formData.meetingRate}
+              onChange={handleInputChange("meetingRate")}
+              max={100}
+              step={1}
+              labelClassName="font-normal"
+            />
             <FormField
               label="Custo Mensal Atual de Agendadores Humanos"
               tooltipText="Custo total mensal com agendadores"
@@ -164,7 +125,6 @@ export const ROICalculator = () => {
               step={100}
               labelClassName="font-normal"
             />
-
             <FormField
               label="Valor de um Lead Fechado"
               tooltipText="Valor médio de um lead convertido"
@@ -175,7 +135,6 @@ export const ROICalculator = () => {
               step={1000}
               labelClassName="font-normal"
             />
-
             <FormField
               label="Reuniões Necessárias para Fechar um Lead"
               tooltipText="Número médio de reuniões até o fechamento"
@@ -184,7 +143,6 @@ export const ROICalculator = () => {
               step={1}
               labelClassName="font-normal"
             />
-
             <Button
               type="submit"
               className="w-full h-12 text-lg bg-[#ff6b00] hover:bg-[#ff6b00]/90 transition-all duration-300 hover:scale-[1.02]"
@@ -198,12 +156,7 @@ export const ROICalculator = () => {
           {results ? (
             <ResultsDisplay results={results} />
           ) : (
-            <div className="text-center space-y-4">
-              <div className="text-4xl text-foreground/40">📊</div>
-              <p className="text-lg text-foreground/60">
-                Os resultados da sua análise aparecerão aqui após preencher e enviar o formulário
-              </p>
-            </div>
+            <SummaryPreview {...formData} allFieldsFilled={allFieldsFilled} />
           )}
         </div>
       </div>
