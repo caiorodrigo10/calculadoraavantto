@@ -86,9 +86,9 @@ export const ROICalculator = () => {
         </div>
       </div>
 
-      <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="space-y-6 max-w-lg">
-          <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="w-full grid grid-cols-1 lg:grid-cols-[40%_60%] gap-8">
+        <div className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6 max-w-md">
             <FormField
               label="Total de Leads Mensais Inbound"
               tooltipText="Total de leads recebidos mensalmente"
