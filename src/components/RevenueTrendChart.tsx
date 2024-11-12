@@ -1,58 +1,59 @@
 import { ChartContainer } from "@/components/ui/chart";
-import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip, Legend } from "recharts";
+import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
+import { Card } from "./ui/card";
 
-const monthlyData = [
-  { month: 'Jan', humano: 719000, ia: 1382280 },
-  { month: 'Fev', humano: 750000, ia: 1390000 },
-  { month: 'Mar', humano: 800000, ia: 1420000 },
-  { month: 'Abr', humano: 780000, ia: 1450000 },
-  { month: 'Mai', humano: 850000, ia: 1480000 },
-  { month: 'Jun', humano: 820000, ia: 1500000 },
-  { month: 'Jul', humano: 730000, ia: 1520000 },
-  { month: 'Ago', humano: 790000, ia: 1550000 },
-  { month: 'Set', humano: 900000, ia: 1580000 },
-  { month: 'Out', humano: 950000, ia: 1600000 },
-  { month: 'Nov', humano: 920000, ia: 1620000 },
-  { month: 'Dez', humano: 880000, ia: 1650000 },
-];
+interface RevenueTrendChartProps {
+  currentRevenue: number;
+  aiRevenue: number;
+}
 
-export const RevenueTrendChart = () => {
+export const RevenueTrendChart = ({ currentRevenue, aiRevenue }: RevenueTrendChartProps) => {
+  // Generate monthly data with 5% growth rate
+  const generateMonthlyData = () => {
+    const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+    const growthRate = 1.05; // 5% monthly growth
+    
+    return months.map((month, index) => ({
+      month,
+      current: Math.round(currentRevenue * Math.pow(growthRate, index)),
+      ai: Math.round(aiRevenue * Math.pow(growthRate, index))
+    }));
+  };
+
+  const data = generateMonthlyData();
+
   return (
-    <div className="w-full space-y-4 mt-8">
-      <h4 className="text-lg font-medium">Tendência de Lucratividade Mensal</h4>
-      <div className="h-[400px] bg-card rounded-lg p-4 border border-border">
+    <Card className="p-6 bg-white">
+      <h3 className="text-lg font-semibold mb-6">Tendência de Receita Anual</h3>
+      <div className="h-[300px]">
         <ChartContainer
           className="w-full"
           config={{
-            humano: { color: "#ef4444" },
-            ia: { color: "#22c55e" }
+            current: { color: "#ef4444" },
+            ai: { color: "#22c55e" }
           }}
         >
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart 
-              data={monthlyData}
-              margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+              data={data}
+              margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
             >
               <defs>
-                <linearGradient id="humanGradient" x1="0" y1="0" x2="0" y2="1">
+                <linearGradient id="currentGradient" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor="#ef4444" stopOpacity={0.3} />
                   <stop offset="100%" stopColor="#ef4444" stopOpacity={0} />
                 </linearGradient>
-                <linearGradient id="iaGradient" x1="0" y1="0" x2="0" y2="1">
+                <linearGradient id="aiGradient" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor="#22c55e" stopOpacity={0.3} />
                   <stop offset="100%" stopColor="#22c55e" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <XAxis 
-                dataKey="month"
+                dataKey="month" 
                 stroke="#888888"
                 fontSize={12}
                 tickLine={false}
                 axisLine={false}
-                angle={0}
-                textAnchor="middle"
-                height={60}
-                padding={{ left: 30, right: 30 }}
               />
               <YAxis
                 stroke="#888888"
@@ -61,40 +62,22 @@ export const RevenueTrendChart = () => {
                 axisLine={false}
                 tickFormatter={(value) => `${(value / 1000).toFixed(0)}K`}
               />
-              <Legend 
-                verticalAlign="top" 
-                height={36}
-                formatter={(value) => {
-                  return value === "humano" ? "Cenário Atual (Humano)" : "Com IA";
-                }}
-              />
-              <Area
-                type="monotone"
-                dataKey="humano"
-                name="humano"
-                stroke="#ef4444"
-                fill="url(#humanGradient)"
-                strokeWidth={2}
-              />
-              <Area
-                type="monotone"
-                dataKey="ia"
-                name="ia"
-                stroke="#22c55e"
-                fill="url(#iaGradient)"
-                strokeWidth={2}
-              />
-              <Tooltip 
+              <Tooltip
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
                     return (
-                      <div className="bg-background p-2 border border-border rounded-lg shadow-lg">
-                        {payload.map((entry) => (
-                          <div key={entry.name} className="text-sm text-foreground">
+                      <div className="bg-white p-2 border border-gray-200 rounded-lg shadow-lg">
+                        {payload.map((entry: any) => (
+                          <div key={entry.name} className="text-sm">
                             <span className="font-medium">
-                              {entry.name === "humano" ? "Cenário Atual: " : "Com IA: "}
+                              {entry.name === "current" ? "Cenário Atual: " : "Com IA: "}
                             </span>
-                            <span>R$ {entry.value.toLocaleString()}</span>
+                            <span>
+                              {new Intl.NumberFormat('pt-BR', {
+                                style: 'currency',
+                                currency: 'BRL'
+                              }).format(entry.value)}
+                            </span>
                           </div>
                         ))}
                       </div>
@@ -103,10 +86,26 @@ export const RevenueTrendChart = () => {
                   return null;
                 }}
               />
+              <Area
+                type="monotone"
+                dataKey="current"
+                stroke="#ef4444"
+                fill="url(#currentGradient)"
+                strokeWidth={2}
+                name="Cenário Atual"
+              />
+              <Area
+                type="monotone"
+                dataKey="ai"
+                stroke="#22c55e"
+                fill="url(#aiGradient)"
+                strokeWidth={2}
+                name="Com IA"
+              />
             </AreaChart>
           </ResponsiveContainer>
         </ChartContainer>
       </div>
-    </div>
+    </Card>
   );
 };
