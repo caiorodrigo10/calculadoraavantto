@@ -59,8 +59,16 @@ export const ROICalculator = () => {
       const { error } = await supabase
         .from('roi_submissions')
         .insert({
-          ...formData,
-          ...contactData,
+          monthly_leads: formData.monthlyLeads,
+          response_rate: formData.responseRate,
+          meeting_rate: formData.meetingRate,
+          current_cost: formData.currentCost,
+          lead_value: formData.leadValue,
+          meetings_to_close: formData.meetingsToClose,
+          first_name: contactData.firstName,
+          last_name: contactData.lastName,
+          email: contactData.email,
+          phone: contactData.phone,
           calculated_results: pendingResults
         });
 
