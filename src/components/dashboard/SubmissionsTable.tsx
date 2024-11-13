@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -10,6 +10,7 @@ import { SearchBar } from "./SearchBar";
 import { TableActions } from "./TableActions";
 import { DeleteDialog } from "./DeleteDialog";
 import { SubmissionsTableHeader } from "./SubmissionsTableHeader";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Submission {
   id: string;
@@ -44,14 +45,32 @@ export const SubmissionsTable = ({
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [submissionsState, setSubmissionsState] = useState<Submission[]>(submissions);
+  const [totalCount, setTotalCount] = useState<number>(0);
 
   useEffect(() => {
     setSubmissionsState(submissions);
+    // Get total count from Supabase
+    const getTotalCount = async () => {
+      const { count } = await supabase
+        .from('roi_submissions')
+        .select('*', { count: 'exact', head: true });
+      setTotalCount(count || 0);
+    };
+    getTotalCount();
   }, [submissions]);
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedIds(submissionsState.map(s => s.id));
+      // If checked, select all items including those not loaded
+      const selectAllItems = async () => {
+        const { data } = await supabase
+          .from('roi_submissions')
+          .select('id');
+        if (data) {
+          setSelectedIds(data.map(item => item.id));
+        }
+      };
+      selectAllItems();
     } else {
       setSelectedIds([]);
     }
@@ -66,10 +85,22 @@ export const SubmissionsTable = ({
   };
 
   const handleDelete = async () => {
-    await onDelete(selectedIds);
-    setSubmissionsState(prev => prev.filter(s => !selectedIds.includes(s.id)));
-    setShowDeleteDialog(false);
-    setSelectedIds([]);
+    try {
+      const { error } = await supabase
+        .from('roi_submissions')
+        .delete()
+        .in('id', selectedIds);
+
+      if (error) throw error;
+
+      // Update local state after successful deletion
+      setSubmissionsState(prev => prev.filter(s => !selectedIds.includes(s.id)));
+      await onDelete(selectedIds);
+      setShowDeleteDialog(false);
+      setSelectedIds([]);
+    } catch (error) {
+      console.error('Error deleting submissions:', error);
+    }
   };
 
   const handleExportCSV = () => {
@@ -115,7 +146,7 @@ export const SubmissionsTable = ({
         <Table>
           <SubmissionsTableHeader
             onSelectAll={handleSelectAll}
-            checked={selectedIds.length === submissionsState.length && submissionsState.length > 0}
+            checked={selectedIds.length === totalCount && totalCount > 0}
           />
           <TableBody>
             {submissionsState.map((submission) => (
