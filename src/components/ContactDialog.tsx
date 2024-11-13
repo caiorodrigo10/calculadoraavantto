@@ -2,6 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { formatPhoneNumber } from "@/lib/format";
 
 interface ContactDialogProps {
   open: boolean;
@@ -24,6 +25,11 @@ export function ContactDialog({ open, onOpenChange, onSubmit, isSubmitting = fal
     email: "",
     phone: "",
   });
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatPhoneNumber(e.target.value);
+    setFormData(prev => ({ ...prev, phone: formatted }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,7 +93,8 @@ export function ContactDialog({ open, onOpenChange, onSubmit, isSubmitting = fal
               id="phone"
               type="tel"
               value={formData.phone}
-              onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+              onChange={handlePhoneChange}
+              placeholder="(11) 99999-9999"
               required
               disabled={isSubmitting}
             />

@@ -79,7 +79,7 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
         </Button>
       </div>
 
-      <div id="results-content" className="space-y-8">
+      <div id="results-content" className="space-y-8 bg-white p-6 rounded-lg">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <ResultCard
             title="Cenário Atual"
@@ -101,6 +101,7 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
         </div>
 
         <motion.div variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}>
+          <h3 className="text-xl font-semibold mb-4 text-gray-800">Comparativo de Desempenho</h3>
           <ComparisonChart data={results.comparisonData} />
         </motion.div>
 
