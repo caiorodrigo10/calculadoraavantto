@@ -26,7 +26,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
-      if (!session && location.pathname !== "/" && location.pathname !== "/login") {
+      const isReportPage = location.pathname.startsWith('/report/');
+      if (!session && !isReportPage && location.pathname !== "/" && location.pathname !== "/login") {
         navigate('/login');
       }
     });

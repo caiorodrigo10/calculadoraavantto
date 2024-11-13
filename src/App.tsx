@@ -33,23 +33,16 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            {/* Index route is now public - no ProtectedRoute wrapper */}
+            {/* Public routes */}
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
-            {/* Protected routes remain wrapped */}
+            <Route path="/report/:id" element={<Report />} />
+            {/* Protected routes */}
             <Route
               path="/dashboard"
               element={
                 <ProtectedRoute>
                   <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/report/:id"
-              element={
-                <ProtectedRoute>
-                  <Report />
                 </ProtectedRoute>
               }
             />
