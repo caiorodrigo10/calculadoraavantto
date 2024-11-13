@@ -17,10 +17,15 @@ const monthlyData = [
 ];
 
 export const RevenueTrendChart = () => {
+  // Determine if we're on mobile using window width
+  const isMobile = window.innerWidth <= 768;
+
   return (
-    <div className="w-[80%] space-y-4 mt-8 mb-[50px] mx-auto">
-      <h4 className="text-lg font-medium text-gray-900">Tendência de Lucratividade Mensal</h4>
-      <div className="h-[400px] bg-card rounded-lg p-4 border border-border">
+    <div className="w-full space-y-4 mt-8 mb-[50px]">
+      <h4 className="text-base sm:text-lg font-medium text-gray-900 text-center">
+        Tendência de Lucratividade Mensal
+      </h4>
+      <div className="h-[200px] sm:h-[400px] bg-card rounded-lg p-2 sm:p-4 border border-border">
         <ChartContainer
           className="w-full"
           config={{
@@ -31,7 +36,12 @@ export const RevenueTrendChart = () => {
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart 
               data={monthlyData}
-              margin={{ top: 20, right: 30, left: 20, bottom: 40 }}
+              margin={{ 
+                top: 20, 
+                right: isMobile ? 10 : 30, 
+                left: isMobile ? 10 : 20, 
+                bottom: isMobile ? 60 : 40 
+              }}
             >
               <defs>
                 <linearGradient id="humanGradient" x1="0" y1="0" x2="0" y2="1">
@@ -46,24 +56,31 @@ export const RevenueTrendChart = () => {
               <XAxis 
                 dataKey="month"
                 stroke="#888888"
-                fontSize={12}
+                fontSize={isMobile ? 10 : 12}
                 tickLine={false}
                 axisLine={false}
                 angle={-45}
                 textAnchor="end"
                 height={70}
-                padding={{ left: 30, right: 30 }}
+                interval={isMobile ? 1 : 0}
+                padding={{ left: 10, right: 10 }}
               />
               <YAxis
                 stroke="#888888"
-                fontSize={12}
+                fontSize={isMobile ? 10 : 12}
                 tickLine={false}
                 axisLine={false}
                 tickFormatter={(value) => `${(value / 1000).toFixed(0)}K`}
+                width={isMobile ? 35 : 45}
+                interval={isMobile ? 1 : 0}
               />
               <Legend 
-                verticalAlign="top" 
+                verticalAlign={isMobile ? "bottom" : "top"}
                 height={36}
+                wrapperStyle={{
+                  fontSize: isMobile ? '10px' : '12px',
+                  paddingTop: isMobile ? '20px' : '0',
+                }}
                 formatter={(value) => {
                   return value === "humano" ? "Cenário Atual (Humano)" : "Com IA";
                 }}
@@ -73,16 +90,16 @@ export const RevenueTrendChart = () => {
                 dataKey="humano"
                 name="humano"
                 stroke="#ef4444"
+                strokeWidth={isMobile ? 1 : 2}
                 fill="url(#humanGradient)"
-                strokeWidth={2}
               />
               <Area
                 type="monotone"
                 dataKey="ia"
                 name="ia"
                 stroke="#22c55e"
+                strokeWidth={isMobile ? 1 : 2}
                 fill="url(#iaGradient)"
-                strokeWidth={2}
               />
               <Tooltip 
                 content={({ active, payload }) => {
@@ -90,7 +107,7 @@ export const RevenueTrendChart = () => {
                     return (
                       <div className="bg-background p-2 border border-border rounded-lg shadow-lg">
                         {payload.map((entry) => (
-                          <div key={entry.name} className="text-sm text-foreground">
+                          <div key={entry.name} className="text-xs sm:text-sm text-foreground">
                             <span className="font-medium">
                               {entry.name === "humano" ? "Cenário Atual: " : "Com IA: "}
                             </span>
