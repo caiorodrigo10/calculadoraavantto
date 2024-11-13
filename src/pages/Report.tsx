@@ -8,7 +8,7 @@ import { InsightsSection } from "@/components/results/InsightsSection";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 interface CalculatedResults {
   roi: number;

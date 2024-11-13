@@ -6,7 +6,7 @@ import { useState } from "react";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { MetricsGrid } from "@/components/dashboard/MetricsGrid";
 import { SubmissionsTable } from "@/components/dashboard/SubmissionsTable";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const ITEMS_PER_PAGE = 5;
 
