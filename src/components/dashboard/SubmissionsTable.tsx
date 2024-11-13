@@ -1,5 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import {
   Table,
   TableBody,
@@ -8,10 +19,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search } from "lucide-react";
+import { Search, Trash2, RotateCcw } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 interface Submission {
   id: string;
@@ -28,6 +40,8 @@ interface SubmissionsTableProps {
   onSearch: () => void;
   onLoadMore: () => void;
   hasMore: boolean;
+  onReset: () => void;
+  onDelete: (ids: string[]) => void;
 }
 
 export const SubmissionsTable = ({
@@ -37,13 +51,39 @@ export const SubmissionsTable = ({
   onSearch,
   onLoadMore,
   hasMore,
+  onReset,
+  onDelete,
 }: SubmissionsTableProps) => {
   const navigate = useNavigate();
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       onSearch();
     }
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedIds(submissions.map(s => s.id));
+    } else {
+      setSelectedIds([]);
+    }
+  };
+
+  const handleSelect = (id: string, checked: boolean) => {
+    if (checked) {
+      setSelectedIds(prev => [...prev, id]);
+    } else {
+      setSelectedIds(prev => prev.filter(i => i !== id));
+    }
+  };
+
+  const handleDelete = () => {
+    onDelete(selectedIds);
+    setShowDeleteDialog(false);
+    setSelectedIds([]);
   };
 
   return (
@@ -59,15 +99,38 @@ export const SubmissionsTable = ({
             className="pl-9"
           />
         </div>
-        <Button onClick={onSearch} variant="secondary">
+        <Button onClick={onSearch} variant="secondary" className="bg-orange-500 hover:bg-orange-600 text-white">
           Pesquisar
         </Button>
+        {searchTerm && (
+          <Button onClick={onReset} variant="ghost" size="icon">
+            <RotateCcw className="h-4 w-4" />
+          </Button>
+        )}
+      </div>
+
+      <div className="flex justify-between items-center">
+        {selectedIds.length > 0 && (
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => setShowDeleteDialog(true)}
+          >
+            Excluir Selecionados
+          </Button>
+        )}
       </div>
 
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-[50px]">
+                <Checkbox
+                  checked={selectedIds.length === submissions.length && submissions.length > 0}
+                  onCheckedChange={(checked) => handleSelectAll(checked as boolean)}
+                />
+              </TableHead>
               <TableHead>ID</TableHead>
               <TableHead>Nome</TableHead>
               <TableHead>Email</TableHead>
@@ -78,6 +141,12 @@ export const SubmissionsTable = ({
           <TableBody>
             {submissions.map((submission) => (
               <TableRow key={submission.id}>
+                <TableCell>
+                  <Checkbox
+                    checked={selectedIds.includes(submission.id)}
+                    onCheckedChange={(checked) => handleSelect(submission.id, checked as boolean)}
+                  />
+                </TableCell>
                 <TableCell className="font-mono text-sm">
                   {submission.id.slice(0, 8)}...
                 </TableCell>
@@ -90,12 +159,22 @@ export const SubmissionsTable = ({
                     locale: ptBR,
                   })}
                 </TableCell>
-                <TableCell className="text-right">
+                <TableCell className="text-right space-x-2">
                   <Button
                     size="sm"
                     onClick={() => navigate(`/report/${submission.id}`)}
                   >
                     Ver Relatório
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => {
+                      setSelectedIds([submission.id]);
+                      setShowDeleteDialog(true);
+                    }}
+                  >
+                    <Trash2 className="h-4 w-4" />
                   </Button>
                 </TableCell>
               </TableRow>
@@ -111,6 +190,25 @@ export const SubmissionsTable = ({
           </Button>
         </div>
       )}
+
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta ação não pode ser desfeita. Isso excluirá permanentemente {selectedIds.length === 1 ? 'este formulário' : 'estes formulários'}.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setShowDeleteDialog(false)}>
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete}>
+              Confirmar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

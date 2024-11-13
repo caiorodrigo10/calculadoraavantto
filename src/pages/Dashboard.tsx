@@ -96,11 +96,40 @@ const Dashboard = () => {
     setPage(1);
   };
 
+  const handleReset = () => {
+    setSearchTerm("");
+    setCurrentSearchTerm("");
+    setPage(1);
+  };
+
+  const handleDelete = async (ids: string[]) => {
+    const { error } = await supabase
+      .from("roi_submissions")
+      .delete()
+      .in("id", ids);
+
+    if (error) {
+      toast({
+        title: "Erro",
+        description: "Falha ao excluir formulários",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({
+      title: "Sucesso",
+      description: "Formulários excluídos com sucesso",
+    });
+
+    refetch();
+  };
+
   const handleLoadMore = () => {
     setPage(prev => prev + 1);
   };
 
-  if (metricsLoading || submissionsLoading) {
+  if (submissionsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
@@ -124,6 +153,8 @@ const Dashboard = () => {
           onSearch={handleSearch}
           onLoadMore={handleLoadMore}
           hasMore={submissions.length % ITEMS_PER_PAGE === 0 && submissions.length > 0}
+          onReset={handleReset}
+          onDelete={handleDelete}
         />
       </div>
     </div>
