@@ -48,6 +48,15 @@ const Login = () => {
                   inputBorderFocus: '#ff6b00',
                 }
               }
+            },
+            className: {
+              anchor: 'hidden',
+              button: 'button-class',
+              container: 'container-class',
+              divider: 'hidden',
+              label: 'label-class',
+              input: 'input-class',
+              message: 'message-class',
             }
           }}
           localization={{
