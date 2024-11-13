@@ -58,10 +58,16 @@ export const SubmissionsTable = ({
   const navigate = useNavigate();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [submissionsState, setSubmissionsState] = useState<Submission[]>(submissions);
+
+  // Update local state when submissions prop changes
+  React.useEffect(() => {
+    setSubmissionsState(submissions);
+  }, [submissions]);
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedIds(submissions.map(s => s.id));
+      setSelectedIds(submissionsState.map(s => s.id));
     } else {
       setSelectedIds([]);
     }
@@ -75,15 +81,17 @@ export const SubmissionsTable = ({
     }
   };
 
-  const handleDelete = () => {
-    onDelete(selectedIds);
+  const handleDelete = async () => {
+    await onDelete(selectedIds);
+    // Update local state immediately
+    setSubmissionsState(prev => prev.filter(s => !selectedIds.includes(s.id)));
     setShowDeleteDialog(false);
     setSelectedIds([]);
   };
 
   const handleExportCSV = () => {
     const headers = ["ID", "Nome", "Email", "Data de Criação"];
-    const csvData = submissions.map(s => [
+    const csvData = submissionsState.map(s => [
       s.id,
       `${s.first_name} ${s.last_name}`,
       s.email,
@@ -126,7 +134,7 @@ export const SubmissionsTable = ({
             <TableRow>
               <TableHead className="w-[50px]">
                 <Checkbox
-                  checked={selectedIds.length === submissions.length && submissions.length > 0}
+                  checked={selectedIds.length === submissionsState.length && submissionsState.length > 0}
                   onCheckedChange={(checked) => handleSelectAll(checked as boolean)}
                 />
               </TableHead>
@@ -138,7 +146,7 @@ export const SubmissionsTable = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {submissions.map((submission) => (
+            {submissionsState.map((submission) => (
               <TableRow key={submission.id}>
                 <TableCell>
                   <Checkbox
