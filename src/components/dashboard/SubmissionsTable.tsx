@@ -25,6 +25,7 @@ interface SubmissionsTableProps {
   submissions: Submission[];
   searchTerm: string;
   onSearchChange: (value: string) => void;
+  onSearch: () => void;
   onLoadMore: () => void;
   hasMore: boolean;
 }
@@ -33,10 +34,17 @@ export const SubmissionsTable = ({
   submissions,
   searchTerm,
   onSearchChange,
+  onSearch,
   onLoadMore,
   hasMore,
 }: SubmissionsTableProps) => {
   const navigate = useNavigate();
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      onSearch();
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -47,9 +55,13 @@ export const SubmissionsTable = ({
             placeholder="Pesquisar por nome, email ou ID..."
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
+            onKeyPress={handleKeyPress}
             className="pl-9"
           />
         </div>
+        <Button onClick={onSearch} variant="secondary">
+          Pesquisar
+        </Button>
       </div>
 
       <div className="rounded-md border">

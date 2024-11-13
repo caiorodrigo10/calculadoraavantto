@@ -12,6 +12,7 @@ const ITEMS_PER_PAGE = 5;
 const Dashboard = () => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentSearchTerm, setCurrentSearchTerm] = useState("");
   const [page, setPage] = useState(1);
   const [submissions, setSubmissions] = useState<any[]>([]);
 
@@ -52,18 +53,17 @@ const Dashboard = () => {
   });
 
   const { isLoading: submissionsLoading, refetch } = useQuery({
-    queryKey: ["submissions", searchTerm, page],
+    queryKey: ["submissions", currentSearchTerm, page],
     queryFn: async () => {
       let query = supabase.from("roi_submissions").select("*", { count: "exact" });
 
-      if (searchTerm) {
-        // Check if searchTerm might be a UUID
+      if (currentSearchTerm) {
         const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-        if (uuidRegex.test(searchTerm)) {
-          query = query.eq('id', searchTerm);
+        if (uuidRegex.test(currentSearchTerm)) {
+          query = query.eq('id', currentSearchTerm);
         } else {
           query = query.or(
-            `first_name.ilike.%${searchTerm}%,last_name.ilike.%${searchTerm}%,email.ilike.%${searchTerm}%`
+            `first_name.ilike.%${currentSearchTerm}%,last_name.ilike.%${currentSearchTerm}%,email.ilike.%${currentSearchTerm}%`
           );
         }
       }
@@ -91,8 +91,8 @@ const Dashboard = () => {
     },
   });
 
-  const handleSearch = (value: string) => {
-    setSearchTerm(value);
+  const handleSearch = () => {
+    setCurrentSearchTerm(searchTerm);
     setPage(1);
   };
 
@@ -120,7 +120,8 @@ const Dashboard = () => {
         <SubmissionsTable
           submissions={submissions}
           searchTerm={searchTerm}
-          onSearchChange={handleSearch}
+          onSearchChange={setSearchTerm}
+          onSearch={handleSearch}
           onLoadMore={handleLoadMore}
           hasMore={submissions.length % ITEMS_PER_PAGE === 0 && submissions.length > 0}
         />
