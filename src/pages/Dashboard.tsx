@@ -141,7 +141,7 @@ const Dashboard = () => {
   return (
     <>
       <Helmet>
-        <title>Dashboard | Calculadora ROI Avantto</title>
+        <title>Avantto | Dashboard ROI</title>
         <meta name="description" content="Visualize e gerencie todas as suas análises de ROI comparando SDRs humanos e IA em um único lugar." />
       </Helmet>
       <div>

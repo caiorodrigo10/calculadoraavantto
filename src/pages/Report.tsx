@@ -90,8 +90,8 @@ const Report = () => {
   return (
     <>
       <Helmet>
-        <title>Relatório de ROI | {submission.first_name} {submission.last_name} | Avantto</title>
-        <meta name="description" content={`Análise detalhada de ROI para ${submission.first_name} ${submission.last_name} comparando SDRs humanos e IA.`} />
+        <title>Avantto | Relatório ROI {submission?.first_name} {submission?.last_name}</title>
+        <meta name="description" content={`Análise detalhada de ROI para ${submission?.first_name} ${submission?.last_name} comparando SDRs humanos e IA.`} />
       </Helmet>
       <div className="min-h-screen bg-white">
         <div className="container mx-auto px-4 py-6 sm:py-12">

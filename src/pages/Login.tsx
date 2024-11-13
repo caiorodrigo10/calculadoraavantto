@@ -19,7 +19,7 @@ const Login = () => {
   return (
     <>
       <Helmet>
-        <title>Login | Calculadora ROI Avantto</title>
+        <title>Avantto | Login</title>
         <meta name="description" content="Acesse sua conta para gerenciar suas análises de ROI e comparações entre SDRs humanos e IA." />
       </Helmet>
       <div className="min-h-screen flex items-center justify-center bg-background">
