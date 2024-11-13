@@ -2,10 +2,21 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2, Mail, Share2 } from "lucide-react";
+import { Loader2, Mail, WhatsApp } from "lucide-react";
 import { ResultsDisplay } from "@/components/ResultsDisplay";
 import { InsightsSection } from "@/components/results/InsightsSection";
 import { Button } from "@/components/ui/button";
+
+interface CalculatedResults {
+  roi: number;
+  paybackPeriod: number;
+  additionalLeadsPerYear: number;
+  profitPerLead: number;
+  aiCost: number;
+  aiRevenue: number;
+  currentRevenue: number;
+  comparisonData: any[];
+}
 
 const Report = () => {
   const { id } = useParams();
@@ -58,7 +69,7 @@ const Report = () => {
     meetingsToClose: submission.meetings_to_close,
   };
 
-  const calculatedResults = submission.calculated_results;
+  const calculatedResults = submission.calculated_results as CalculatedResults;
 
   const handleShareEmail = () => {
     const subject = `Análise ROI - SDR Humanos vs IA`;
@@ -74,7 +85,7 @@ const Report = () => {
   return (
     <div className="min-h-screen bg-white">
       <div className="container mx-auto py-12">
-        <div className="max-w-[50%] mx-auto space-y-8">
+        <div className="max-w-[70%] mx-auto space-y-8">
           <header className="space-y-4">
             <h1 className="text-4xl font-bold text-gray-900">
               Calculadora de Lucro para {submission.first_name} {submission.last_name}
@@ -92,22 +103,21 @@ const Report = () => {
                 Compartilhar por Email
               </Button>
               <Button
-                variant="outline"
                 onClick={handleShareWhatsApp}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 bg-[#25D366] hover:bg-[#128C7E] text-white"
               >
-                <Share2 className="h-4 w-4" />
+                <WhatsApp className="h-4 w-4" />
                 Compartilhar por WhatsApp
               </Button>
             </div>
           </header>
 
           <div className="space-y-12">
-            <section className="bg-card rounded-lg p-8 shadow-sm">
+            <section className="bg-white rounded-lg p-8">
               <ResultsDisplay results={calculatedResults} formData={formData} />
             </section>
 
-            <section className="bg-card rounded-lg p-8 shadow-sm">
+            <section className="bg-white rounded-lg p-8">
               <InsightsSection 
                 roi={calculatedResults.roi}
                 paybackPeriod={calculatedResults.paybackPeriod}
