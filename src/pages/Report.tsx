@@ -78,15 +78,30 @@ const Report = () => {
   };
 
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-8">ROI Report</h1>
-      <ResultsDisplay results={calculatedResults} formData={formData} />
-      <InsightsSection 
-        roi={calculatedResults.roi}
-        paybackPeriod={calculatedResults.paybackPeriod}
-        additionalLeadsPerYear={calculatedResults.additionalLeadsPerYear}
-        profitPerLead={calculatedResults.profitPerLead}
-      />
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto py-12 space-y-12">
+        <header className="space-y-4">
+          <h1 className="text-4xl font-bold">ROI Report</h1>
+          <p className="text-muted-foreground">
+            Análise detalhada do retorno sobre investimento
+          </p>
+        </header>
+
+        <div className="space-y-12">
+          <section className="bg-card rounded-lg p-8 shadow-sm">
+            <ResultsDisplay results={calculatedResults} formData={formData} />
+          </section>
+
+          <section className="bg-card rounded-lg p-8 shadow-sm">
+            <InsightsSection 
+              roi={calculatedResults.roi}
+              paybackPeriod={calculatedResults.paybackPeriod}
+              additionalLeadsPerYear={calculatedResults.additionalLeadsPerYear}
+              profitPerLead={calculatedResults.profitPerLead}
+            />
+          </section>
+        </div>
+      </div>
     </div>
   );
 };
