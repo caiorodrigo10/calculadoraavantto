@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { ResultCard } from "./results/ResultCard";
-import { InsightsSection } from "./results/InsightsSection";
 
 interface ResultsDisplayProps {
   results: any;
@@ -56,7 +55,7 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
 
   return (
     <motion.div 
-      className="space-y-6 w-full"
+      className="space-y-4 sm:space-y-6 w-full"
       initial="hidden"
       animate="show"
       variants={{
@@ -67,8 +66,8 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
         }
       }}
     >
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-        <h2 className="text-2xl font-bold text-white">Resultados da Análise</h2>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Resultados da Análise</h2>
         <Button
           onClick={handleDownload}
           variant="outline"
@@ -79,8 +78,8 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
         </Button>
       </div>
 
-      <div id="results-content" className="space-y-8 bg-white p-6 rounded-lg">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div id="results-content" className="space-y-6 sm:space-y-8 bg-white p-4 sm:p-6 rounded-lg">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           <ResultCard
             title="Cenário Atual"
             data={[
@@ -101,23 +100,23 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
         </div>
 
         <motion.div variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}>
-          <h3 className="text-xl font-semibold mb-4 text-gray-800">Comparativo de Desempenho</h3>
+          <h3 className="text-lg sm:text-xl font-semibold mb-4 text-gray-800">Comparativo de Desempenho</h3>
           <ComparisonChart data={results.comparisonData} />
         </motion.div>
 
         <motion.div 
           variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
-          className="text-center p-8 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border border-gray-200"
+          className="text-center p-4 sm:p-8 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border border-gray-200"
         >
-          <h3 className="text-xl font-semibold mb-2 text-gray-800">
+          <h3 className="text-lg sm:text-xl font-semibold mb-2 text-gray-800">
             Potencialize seus Resultados com IA
           </h3>
-          <p className="text-lg mb-4 text-gray-600">
+          <p className="text-base sm:text-lg mb-4 text-gray-600">
             Agende uma reunião com nossos especialistas e descubra como implementar 
             essa solução em sua empresa.
           </p>
           <Button 
-            className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white text-lg px-8 py-6"
+            className="w-[90%] sm:w-auto bg-green-600 hover:bg-green-700 text-white text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6"
             onClick={() => window.open('#', '_blank')}
           >
             Agendar Demonstração
