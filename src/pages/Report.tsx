@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2, Mail, WhatsApp } from "lucide-react";
+import { Loader2, Mail, MessageCircle } from "lucide-react";
 import { ResultsDisplay } from "@/components/ResultsDisplay";
 import { InsightsSection } from "@/components/results/InsightsSection";
 import { Button } from "@/components/ui/button";
@@ -69,7 +69,7 @@ const Report = () => {
     meetingsToClose: submission.meetings_to_close,
   };
 
-  const calculatedResults = submission.calculated_results as CalculatedResults;
+  const calculatedResults = submission.calculated_results as unknown as CalculatedResults;
 
   const handleShareEmail = () => {
     const subject = `Análise ROI - SDR Humanos vs IA`;
@@ -106,7 +106,7 @@ const Report = () => {
                 onClick={handleShareWhatsApp}
                 className="flex items-center gap-2 bg-[#25D366] hover:bg-[#128C7E] text-white"
               >
-                <WhatsApp className="h-4 w-4" />
+                <MessageCircle className="h-4 w-4" />
                 Compartilhar por WhatsApp
               </Button>
             </div>
