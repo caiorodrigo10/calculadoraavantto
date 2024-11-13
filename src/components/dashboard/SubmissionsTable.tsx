@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   AlertDialog,
@@ -19,11 +18,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search, Trash2, RotateCcw } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { SearchBar } from "./SearchBar";
+import { TableActions } from "./TableActions";
 
 interface Submission {
   id: string;
@@ -58,12 +59,6 @@ export const SubmissionsTable = ({
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      onSearch();
-    }
-  };
-
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
       setSelectedIds(submissions.map(s => s.id));
@@ -86,40 +81,44 @@ export const SubmissionsTable = ({
     setSelectedIds([]);
   };
 
+  const handleExportCSV = () => {
+    const headers = ["ID", "Nome", "Email", "Data de Criação"];
+    const csvData = submissions.map(s => [
+      s.id,
+      `${s.first_name} ${s.last_name}`,
+      s.email,
+      format(new Date(s.created_at), "dd/MM/yyyy", { locale: ptBR })
+    ]);
+
+    const csvContent = [
+      headers.join(","),
+      ...csvData.map(row => row.join(","))
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `submissions-${format(new Date(), "dd-MM-yyyy")}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Pesquisar por nome, email ou ID..."
-            value={searchTerm}
-            onChange={(e) => onSearchChange(e.target.value)}
-            onKeyPress={handleKeyPress}
-            className="pl-9"
-          />
-        </div>
-        <Button onClick={onSearch} variant="secondary" className="bg-orange-500 hover:bg-orange-600 text-white">
-          Pesquisar
-        </Button>
-        {searchTerm && (
-          <Button onClick={onReset} variant="ghost" size="icon">
-            <RotateCcw className="h-4 w-4" />
-          </Button>
-        )}
-      </div>
+      <SearchBar
+        searchTerm={searchTerm}
+        onSearchChange={onSearchChange}
+        onSearch={onSearch}
+        onReset={onReset}
+      />
 
-      <div className="flex justify-between items-center">
-        {selectedIds.length > 0 && (
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={() => setShowDeleteDialog(true)}
-          >
-            Excluir Selecionados
-          </Button>
-        )}
-      </div>
+      <TableActions
+        selectedIds={selectedIds}
+        onDelete={() => setShowDeleteDialog(true)}
+        onExport={handleExportCSV}
+      />
 
       <div className="rounded-md border">
         <Table>
