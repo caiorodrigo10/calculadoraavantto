@@ -11,6 +11,7 @@ import { TableActions } from "./TableActions";
 import { DeleteDialog } from "./DeleteDialog";
 import { SubmissionsTableHeader } from "./SubmissionsTableHeader";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Submission {
   id: string;
@@ -42,6 +43,7 @@ export const SubmissionsTable = ({
   onDelete,
 }: SubmissionsTableProps) => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [submissionsState, setSubmissionsState] = useState<Submission[]>(submissions);
@@ -49,28 +51,24 @@ export const SubmissionsTable = ({
 
   useEffect(() => {
     setSubmissionsState(submissions);
-    // Get total count from Supabase
-    const getTotalCount = async () => {
-      const { count } = await supabase
-        .from('roi_submissions')
-        .select('*', { count: 'exact', head: true });
-      setTotalCount(count || 0);
-    };
-    getTotalCount();
+    fetchTotalCount();
   }, [submissions]);
 
-  const handleSelectAll = (checked: boolean) => {
+  const fetchTotalCount = async () => {
+    const { count } = await supabase
+      .from('roi_submissions')
+      .select('*', { count: 'exact', head: true });
+    setTotalCount(count || 0);
+  };
+
+  const handleSelectAll = async (checked: boolean) => {
     if (checked) {
-      // If checked, select all items including those not loaded
-      const selectAllItems = async () => {
-        const { data } = await supabase
-          .from('roi_submissions')
-          .select('id');
-        if (data) {
-          setSelectedIds(data.map(item => item.id));
-        }
-      };
-      selectAllItems();
+      const { data } = await supabase
+        .from('roi_submissions')
+        .select('id');
+      if (data) {
+        setSelectedIds(data.map(item => item.id));
+      }
     } else {
       setSelectedIds([]);
     }
@@ -91,11 +89,25 @@ export const SubmissionsTable = ({
         .delete()
         .in('id', selectedIds);
 
-      if (error) throw error;
+      if (error) {
+        toast({
+          title: "Erro ao excluir",
+          description: "Não foi possível excluir os itens selecionados.",
+          variant: "destructive",
+        });
+        throw error;
+      }
 
-      // Update local state after successful deletion
+      // Update local state and parent component
       setSubmissionsState(prev => prev.filter(s => !selectedIds.includes(s.id)));
       await onDelete(selectedIds);
+      await fetchTotalCount(); // Refresh total count
+      
+      toast({
+        title: "Sucesso",
+        description: "Itens excluídos com sucesso.",
+      });
+
       setShowDeleteDialog(false);
       setSelectedIds([]);
     } catch (error) {
