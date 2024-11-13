@@ -2,18 +2,10 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, Mail, Share2 } from "lucide-react";
 import { ResultsDisplay } from "@/components/ResultsDisplay";
 import { InsightsSection } from "@/components/results/InsightsSection";
-
-interface FormData {
-  monthlyLeads: number;
-  responseRate: number;
-  meetingRate: number;
-  currentCost: number;
-  leadValue: number;
-  meetingsToClose: number;
-}
+import { Button } from "@/components/ui/button";
 
 const Report = () => {
   const { id } = useParams();
@@ -57,7 +49,7 @@ const Report = () => {
     );
   }
 
-  const formData: FormData = {
+  const formData = {
     monthlyLeads: submission.monthly_leads,
     responseRate: submission.response_rate,
     meetingRate: submission.meeting_rate,
@@ -66,40 +58,64 @@ const Report = () => {
     meetingsToClose: submission.meetings_to_close,
   };
 
-  const calculatedResults = submission.calculated_results as {
-    roi: number;
-    paybackPeriod: number;
-    additionalLeadsPerYear: number;
-    profitPerLead: number;
-    aiCost: number;
-    aiRevenue: number;
-    currentRevenue: number;
-    comparisonData: any[];
+  const calculatedResults = submission.calculated_results;
+
+  const handleShareEmail = () => {
+    const subject = `Análise ROI - SDR Humanos vs IA`;
+    const body = `Confira a análise de ROI para ${submission.first_name} ${submission.last_name}`;
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
+  const handleShareWhatsApp = () => {
+    const text = `Confira a análise de ROI para ${submission.first_name} ${submission.last_name}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto py-12 space-y-12">
-        <header className="space-y-4">
-          <h1 className="text-4xl font-bold">ROI Report</h1>
-          <p className="text-muted-foreground">
-            Análise detalhada do retorno sobre investimento
-          </p>
-        </header>
+    <div className="min-h-screen bg-white">
+      <div className="container mx-auto py-12">
+        <div className="max-w-[50%] mx-auto space-y-8">
+          <header className="space-y-4">
+            <h1 className="text-4xl font-bold text-gray-900">
+              Calculadora de Lucro para {submission.first_name} {submission.last_name}
+            </h1>
+            <p className="text-xl text-gray-600">
+              SDR Humanos vs IA
+            </p>
+            <div className="flex gap-4">
+              <Button
+                variant="outline"
+                onClick={handleShareEmail}
+                className="flex items-center gap-2"
+              >
+                <Mail className="h-4 w-4" />
+                Compartilhar por Email
+              </Button>
+              <Button
+                variant="outline"
+                onClick={handleShareWhatsApp}
+                className="flex items-center gap-2"
+              >
+                <Share2 className="h-4 w-4" />
+                Compartilhar por WhatsApp
+              </Button>
+            </div>
+          </header>
 
-        <div className="space-y-12">
-          <section className="bg-card rounded-lg p-8 shadow-sm">
-            <ResultsDisplay results={calculatedResults} formData={formData} />
-          </section>
+          <div className="space-y-12">
+            <section className="bg-card rounded-lg p-8 shadow-sm">
+              <ResultsDisplay results={calculatedResults} formData={formData} />
+            </section>
 
-          <section className="bg-card rounded-lg p-8 shadow-sm">
-            <InsightsSection 
-              roi={calculatedResults.roi}
-              paybackPeriod={calculatedResults.paybackPeriod}
-              additionalLeadsPerYear={calculatedResults.additionalLeadsPerYear}
-              profitPerLead={calculatedResults.profitPerLead}
-            />
-          </section>
+            <section className="bg-card rounded-lg p-8 shadow-sm">
+              <InsightsSection 
+                roi={calculatedResults.roi}
+                paybackPeriod={calculatedResults.paybackPeriod}
+                additionalLeadsPerYear={calculatedResults.additionalLeadsPerYear}
+                profitPerLead={calculatedResults.profitPerLead}
+              />
+            </section>
+          </div>
         </div>
       </div>
     </div>
