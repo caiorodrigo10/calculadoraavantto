@@ -31,7 +31,7 @@ export const RevenueTrendChart = () => {
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart 
               data={monthlyData}
-              margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+              margin={{ top: 20, right: 30, left: 20, bottom: 40 }}
             >
               <defs>
                 <linearGradient id="humanGradient" x1="0" y1="0" x2="0" y2="1">
@@ -49,9 +49,9 @@ export const RevenueTrendChart = () => {
                 fontSize={12}
                 tickLine={false}
                 axisLine={false}
-                angle={0}
-                textAnchor="middle"
-                height={60}
+                angle={-45}
+                textAnchor="end"
+                height={70}
                 padding={{ left: 30, right: 30 }}
               />
               <YAxis
