@@ -68,11 +68,11 @@ export const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
       }}
     >
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-        <h2 className="text-2xl font-bold text-gray-800">Resultados da Análise</h2>
+        <h2 className="text-2xl font-bold text-white">Resultados da Análise</h2>
         <Button
           onClick={handleDownload}
           variant="outline"
-          className="w-full sm:w-auto flex items-center justify-center gap-2 bg-gray-900 text-white hover:bg-gray-800"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff6b00]/90 text-white"
         >
           <Download className="h-4 w-4" />
           Baixar Relatório

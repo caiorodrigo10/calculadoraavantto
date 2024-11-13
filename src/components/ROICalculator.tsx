@@ -99,7 +99,7 @@ export const ROICalculator = () => {
           height={29}
         />
         <h1 className="text-3xl sm:text-5xl font-normal leading-tight">
-          Qual é o Custo da IA vs. Agendadores Humanos?
+          Calculadora de Custos de SDR Humanos vs Agentes AI Avantto
         </h1>
         <p className="text-xl sm:text-2xl text-foreground/80 px-2">
           Calcule para saber o momento certo de migrar para uma solução de qualificação e agendamento de leads automatizada.
