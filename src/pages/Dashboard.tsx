@@ -6,6 +6,7 @@ import { useState } from "react";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { MetricsGrid } from "@/components/dashboard/MetricsGrid";
 import { SubmissionsTable } from "@/components/dashboard/SubmissionsTable";
+import { Helmet } from "react-helmet";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -138,26 +139,32 @@ const Dashboard = () => {
   }
 
   return (
-    <div>
-      <DashboardHeader />
+    <>
+      <Helmet>
+        <title>Dashboard | Calculadora ROI Avantto</title>
+        <meta name="description" content="Visualize e gerencie todas as suas análises de ROI comparando SDRs humanos e IA em um único lugar." />
+      </Helmet>
+      <div>
+        <DashboardHeader />
 
-      <div className="container mx-auto py-8">
-        <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
+        <div className="container mx-auto py-8">
+          <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
 
-        <MetricsGrid metrics={metrics!} />
+          <MetricsGrid metrics={metrics!} />
 
-        <SubmissionsTable
-          submissions={submissions}
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          onSearch={handleSearch}
-          onLoadMore={handleLoadMore}
-          hasMore={submissions.length % ITEMS_PER_PAGE === 0 && submissions.length > 0}
-          onReset={handleReset}
-          onDelete={handleDelete}
-        />
+          <SubmissionsTable
+            submissions={submissions}
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            onSearch={handleSearch}
+            onLoadMore={handleLoadMore}
+            hasMore={submissions.length % ITEMS_PER_PAGE === 0 && submissions.length > 0}
+            onReset={handleReset}
+            onDelete={handleDelete}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
