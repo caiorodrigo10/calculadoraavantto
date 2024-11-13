@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { FormField } from "./FormField";
 import { ContactDialog, ContactFormData } from "./ContactDialog";
 import { SummaryPreview } from "./SummaryPreview";
+import { Footer } from "./Footer";
 import { supabase } from "@/integrations/supabase/client";
 
 interface FormData {
@@ -98,7 +99,7 @@ export const ROICalculator = () => {
           width={130}
           height={29}
         />
-        <h1 className="text-3xl sm:text-5xl font-normal leading-tight">
+        <h1 className="text-4xl sm:text-6xl font-normal leading-tight">
           Calculadora de Custos de SDR Humanos vs Agentes AI Avantto
         </h1>
         <p className="text-xl sm:text-2xl text-foreground/80 px-2">
@@ -191,6 +192,8 @@ export const ROICalculator = () => {
           )}
         </div>
       </div>
+
+      <Footer />
 
       <ContactDialog
         open={showContactDialog}
