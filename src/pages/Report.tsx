@@ -6,6 +6,8 @@ import { Loader2, Mail, MessageCircle } from "lucide-react";
 import { ResultsDisplay } from "@/components/ResultsDisplay";
 import { InsightsSection } from "@/components/results/InsightsSection";
 import { Button } from "@/components/ui/button";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 interface CalculatedResults {
   roi: number;
@@ -82,18 +84,22 @@ const Report = () => {
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
   };
 
+  const formattedDate = format(new Date(submission.created_at), "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
+
   return (
     <div className="min-h-screen bg-white">
       <div className="container mx-auto py-12">
-        <div className="max-w-[70%] mx-auto space-y-8">
-          <header className="space-y-4">
-            <h1 className="text-4xl font-bold text-gray-900">
-              Calculadora de Lucro para {submission.first_name} {submission.last_name}
-            </h1>
-            <p className="text-xl text-gray-600">
-              SDR Humanos vs IA
-            </p>
-            <div className="flex gap-4">
+        <div className="max-w-[85%] mx-auto space-y-8">
+          <header className="space-y-6 text-center">
+            <div className="space-y-2">
+              <h1 className="text-4xl font-bold text-gray-900">
+                SDR Humano vs IA Avantto
+              </h1>
+              <p className="text-lg text-gray-600">
+                Relatório gerado para {submission.first_name} {submission.last_name} em {formattedDate}
+              </p>
+            </div>
+            <div className="flex justify-center gap-4">
               <Button
                 variant="outline"
                 onClick={handleShareEmail}
