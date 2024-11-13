@@ -59,8 +59,7 @@ const Login = () => {
                 password_input_placeholder: "Sua senha",
                 button_label: "Entrar",
                 loading_button_label: "Entrando...",
-                social_provider_text: "Entrar com {{provider}}",
-                link_text: "Já tem uma conta? Entre"
+                social_provider_text: "Entrar com {{provider}}"
               },
               forgotten_password: {
                 link_text: "Esqueceu sua senha?",
