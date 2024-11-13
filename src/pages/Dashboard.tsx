@@ -54,14 +54,18 @@ const Dashboard = () => {
   const { isLoading: submissionsLoading, refetch } = useQuery({
     queryKey: ["submissions", searchTerm, page],
     queryFn: async () => {
-      let query = supabase
-        .from("roi_submissions")
-        .select("*", { count: "exact" });
+      let query = supabase.from("roi_submissions").select("*", { count: "exact" });
 
       if (searchTerm) {
-        query = query.or(
-          `first_name.ilike.%${searchTerm}%,last_name.ilike.%${searchTerm}%,email.ilike.%${searchTerm}%,id.ilike.%${searchTerm}%`
-        );
+        // Check if searchTerm might be a UUID
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        if (uuidRegex.test(searchTerm)) {
+          query = query.eq('id', searchTerm);
+        } else {
+          query = query.or(
+            `first_name.ilike.%${searchTerm}%,last_name.ilike.%${searchTerm}%,email.ilike.%${searchTerm}%`
+          );
+        }
       }
 
       const { data, error, count } = await query
