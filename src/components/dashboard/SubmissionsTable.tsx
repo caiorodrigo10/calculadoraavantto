@@ -1,30 +1,15 @@
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Trash2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { Trash2 } from "lucide-react";
 import { SearchBar } from "./SearchBar";
 import { TableActions } from "./TableActions";
+import { DeleteDialog } from "./DeleteDialog";
+import { SubmissionsTableHeader } from "./SubmissionsTableHeader";
 
 interface Submission {
   id: string;
@@ -60,8 +45,7 @@ export const SubmissionsTable = ({
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [submissionsState, setSubmissionsState] = useState<Submission[]>(submissions);
 
-  // Update local state when submissions prop changes
-  React.useEffect(() => {
+  useEffect(() => {
     setSubmissionsState(submissions);
   }, [submissions]);
 
@@ -83,7 +67,6 @@ export const SubmissionsTable = ({
 
   const handleDelete = async () => {
     await onDelete(selectedIds);
-    // Update local state immediately
     setSubmissionsState(prev => prev.filter(s => !selectedIds.includes(s.id)));
     setShowDeleteDialog(false);
     setSelectedIds([]);
@@ -130,21 +113,10 @@ export const SubmissionsTable = ({
 
       <div className="rounded-md border">
         <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[50px]">
-                <Checkbox
-                  checked={selectedIds.length === submissionsState.length && submissionsState.length > 0}
-                  onCheckedChange={(checked) => handleSelectAll(checked as boolean)}
-                />
-              </TableHead>
-              <TableHead>ID</TableHead>
-              <TableHead>Nome</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Data</TableHead>
-              <TableHead className="text-right">Ações</TableHead>
-            </TableRow>
-          </TableHeader>
+          <SubmissionsTableHeader
+            onSelectAll={handleSelectAll}
+            checked={selectedIds.length === submissionsState.length && submissionsState.length > 0}
+          />
           <TableBody>
             {submissionsState.map((submission) => (
               <TableRow key={submission.id}>
@@ -198,24 +170,12 @@ export const SubmissionsTable = ({
         </div>
       )}
 
-      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
-            <AlertDialogDescription>
-              Esta ação não pode ser desfeita. Isso excluirá permanentemente {selectedIds.length === 1 ? 'este formulário' : 'estes formulários'}.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setShowDeleteDialog(false)}>
-              Cancelar
-            </AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>
-              Confirmar
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <DeleteDialog
+        open={showDeleteDialog}
+        onOpenChange={setShowDeleteDialog}
+        onConfirm={handleDelete}
+        selectedCount={selectedIds.length}
+      />
     </div>
   );
 };
