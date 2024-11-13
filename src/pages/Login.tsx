@@ -26,6 +26,9 @@ const Login = () => {
             width={130}
             height={29}
           />
+          <h2 className="text-2xl font-semibold text-white mb-4">
+            Calculadora de ROI: Humano vs IA
+          </h2>
         </div>
         <Auth
           supabaseClient={supabase}
@@ -47,8 +50,32 @@ const Login = () => {
               }
             }
           }}
+          localization={{
+            variables: {
+              sign_in: {
+                email_label: "Email",
+                password_label: "Senha",
+                email_input_placeholder: "Seu email",
+                password_input_placeholder: "Sua senha",
+                button_label: "Entrar",
+                loading_button_label: "Entrando...",
+                social_provider_text: "Entrar com {{provider}}",
+                link_text: "Já tem uma conta? Entre"
+              },
+              forgotten_password: {
+                link_text: "Esqueceu sua senha?",
+                email_label: "Email",
+                password_label: "Senha",
+                email_input_placeholder: "Seu email",
+                button_label: "Enviar instruções",
+                loading_button_label: "Enviando instruções...",
+                confirmation_text: "Verifique seu email para redefinir sua senha"
+              }
+            }
+          }}
           theme="dark"
           providers={[]}
+          view="sign_in"
         />
       </div>
     </div>
