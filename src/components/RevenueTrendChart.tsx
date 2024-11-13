@@ -18,8 +18,8 @@ const monthlyData = [
 
 export const RevenueTrendChart = () => {
   return (
-    <div className="w-full space-y-4 mt-8">
-      <h4 className="text-lg font-medium">Tendência de Lucratividade Mensal</h4>
+    <div className="w-[40%] space-y-4 mt-8 mb-[50px]">
+      <h4 className="text-lg font-medium text-gray-900">Tendência de Lucratividade Mensal</h4>
       <div className="h-[400px] bg-card rounded-lg p-4 border border-border">
         <ChartContainer
           className="w-full"
